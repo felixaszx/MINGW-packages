@@ -1,4 +1,4 @@
-# Maintainer: Martell Malone <martell malone at g mail dot com>
+# Maintainer: Felixaszx (Felix Xing) felixxing3009@outlook.com
 
 _realname=box2d
 pkgbase=mingw-w64-${_realname}-3.0
