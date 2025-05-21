@@ -5,9 +5,9 @@ pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=12.0.0.r723.gad150be87
+pkgver=12.0.0.r731.g2ca6f1348
 pkgrel=1
-_commit='ad150be87e14159a82f3c8dce03c0c1e6263aee2'
+_commit='2ca6f1348cab58b5b994fd5916ff57445ade22f8'
 pkgdesc="MinGW-w64 libmangle (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -16,14 +16,13 @@ msys2_repository_url="https://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tr
 license=('spdx:MIT')
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-binutils"
              "${MINGW_PACKAGE_PREFIX}-autotools"
              "${MINGW_PACKAGE_PREFIX}-crt-git"
              "${MINGW_PACKAGE_PREFIX}-headers-git"
              "git")
 options=('!emptydirs')
 source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=$_commit")
-sha256sums=('79ad9ccddaaf4873cad0123383c418219a461e4cc3fbbfeecdee15e8cd4a8e1f')
+sha256sums=('7151f7b1d04445fa4ec40a3edabdafa4b12867aaf64f3ad8329e9fcc3e05b7c3')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -42,5 +41,6 @@ build() {
 package() {
   cd "${srcdir}"/build-${MSYSTEM}
   make DESTDIR="${pkgdir}" install
-  install -Dm644 "${srcdir}"/mingw-w64/mingw-w64-libraries/libmangle/COPYING "${pkgdir}"${MINGW_PREFIX}/share/licenses/mingw-w64-libraries/COPYING.${_realname}
+  install -Dm644 "${srcdir}"/mingw-w64/mingw-w64-libraries/libmangle/COPYING \
+    "${pkgdir}"${MINGW_PREFIX}/share/licenses/mingw-w64-libraries/COPYING.${_realname}
 }

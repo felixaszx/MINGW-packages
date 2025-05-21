@@ -3,9 +3,9 @@
 _realname=crt
 pkgbase=mingw-w64-${_realname}-git
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
-pkgver=12.0.0.r723.gad150be87
-pkgrel=2
-_commit='ad150be87e14159a82f3c8dce03c0c1e6263aee2'
+pkgver=12.0.0.r731.g2ca6f1348
+pkgrel=1
+_commit='2ca6f1348cab58b5b994fd5916ff57445ade22f8'
 pkgdesc='MinGW-w64 CRT for Windows (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -15,18 +15,15 @@ license=('spdx:ZPL-2.1')
 groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
 depends=("${MINGW_PACKAGE_PREFIX}-headers-git")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-binutils"
              "${MINGW_PACKAGE_PREFIX}-autotools"
              "git")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 options=('!strip' '!buildflags' '!emptydirs')
 source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=$_commit"
-        0001-crt-delayimp-Make-an-IAT-entry-writeable-before-modi.patch
-        https://github.com/mingw-w64/mingw-w64/commit/07e34538d5a7d5e86ab47c7ba47becb32f7d827e.patch)
-sha256sums=('79ad9ccddaaf4873cad0123383c418219a461e4cc3fbbfeecdee15e8cd4a8e1f'
-            'fcef8b83090c57ff897f471aeb0cd5a71d6385ff569eba8bbef0c424c21acda4'
-            '96cfa6b44c14494a8d2a02ed3687cad57658188dfb90fe5f787d536cf69aa488')
+        0001-crt-delayimp-Make-an-IAT-entry-writeable-before-modi.patch)
+sha256sums=('7151f7b1d04445fa4ec40a3edabdafa4b12867aaf64f3ad8329e9fcc3e05b7c3'
+            'fcef8b83090c57ff897f471aeb0cd5a71d6385ff569eba8bbef0c424c21acda4')
 
 pkgver() {
   cd "${srcdir}/mingw-w64"
@@ -36,7 +33,6 @@ pkgver() {
 prepare() {
   cd "${srcdir}/mingw-w64"
   patch -p1 -i "${srcdir}/0001-crt-delayimp-Make-an-IAT-entry-writeable-before-modi.patch"
-  git apply -R "${srcdir}/07e34538d5a7d5e86ab47c7ba47becb32f7d827e.patch"
 }
 
 build() {
