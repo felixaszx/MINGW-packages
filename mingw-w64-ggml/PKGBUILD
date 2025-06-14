@@ -3,7 +3,7 @@
 _realname=ggml
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.0.2031
+pkgver=0.0.2144
 pkgrel=1
 pkgdesc="Tensor library for machine learning. (mingw-w64)"
 arch=('any')
@@ -11,7 +11,7 @@ mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/ggml-org/ggml"
 license=('spdx:MIT')
 depends=(
-  "${MINGW_PACKAGE_PREFIX}-gcc-libs"
+  "${MINGW_PACKAGE_PREFIX}-cc-libs"
   "${MINGW_PACKAGE_PREFIX}-openblas"
   "${MINGW_PACKAGE_PREFIX}-omp"
   "${MINGW_PACKAGE_PREFIX}-opencl-icd"
@@ -27,9 +27,9 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
   'git'
 )
-_commit='726dbd0636ae954ba3805c6e1fe6ecc69f851c5b'
+_commit='a1761cd64ce4a75a9770a954a013422c7910db8b'
 source=("${_realname}"::"git+${url}.git#commit=${_commit}")
-sha256sums=('b89220c45badc6128a6fb88ce381256236c5f1b36bf4e052d496b15621458a8d')
+sha256sums=('c7e7d7571bdc4be0d8d8279db01afd4dedf6f4beb31021be550d43c7c0a4745b')
 
 pkgver() {
   cd "${_realname}"
@@ -48,6 +48,10 @@ build() {
   else
     extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
   fi
+
+  # if [[ ${CARCH} == x86_64 ]]; then
+  #   extra_config+=("-DGGML_BACKEND_DL=ON" "-DGGML_CPU_ALL_VARIANTS=ON")
+  # fi
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
     cmake \

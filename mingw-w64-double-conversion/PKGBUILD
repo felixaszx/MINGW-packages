@@ -4,17 +4,17 @@ _realname=double-conversion
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 pkgver=3.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary-decimal and decimal-binary routines for IEEE doubles (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/google/double-conversion"
-license=('BSD')
-depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs")
-makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
-             "${MINGW_PACKAGE_PREFIX}-ninja"
-             "${MINGW_PACKAGE_PREFIX}-cc")
-source=("${_realname}-${pkgver}.tar.gz::https://github.com/google/double-conversion/archive/v${pkgver}.tar.gz")
+license=('spdx:BSD-3-Clause')
+depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "${MINGW_PACKAGE_PREFIX}-ninja")
+source=("https://github.com/google/double-conversion/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
 sha256sums=('fe54901055c71302dcdc5c3ccbe265a6c191978f3761ce1414d0895d6b0ea90e')
 
 build() {
@@ -25,6 +25,7 @@ build() {
     ${MINGW_PREFIX}/bin/cmake \
       -G'Ninja' \
       -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_LIBDIR=lib \
       -DBUILD_SHARED_LIBS=ON \
@@ -39,6 +40,7 @@ build() {
     ${MINGW_PREFIX}/bin/cmake \
       -G'Ninja' \
       -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_LIBDIR=lib \
       -DBUILD_SHARED_LIBS=OFF \
@@ -57,5 +59,6 @@ package() {
   DESTDIR="${pkgdir}" cmake --install .
 
   # License
-  install -Dm644 "${srcdir}"/${_realname}-${pkgver}/LICENSE "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
+  install -Dm644 "${srcdir}"/${_realname}-${pkgver}/LICENSE \
+    "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
 }
