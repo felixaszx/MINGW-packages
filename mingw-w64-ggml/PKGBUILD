@@ -3,7 +3,7 @@
 _realname=ggml
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.0.2144
+pkgver=0.0.2254
 pkgrel=1
 pkgdesc="Tensor library for machine learning. (mingw-w64)"
 arch=('any')
@@ -27,9 +27,9 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
   'git'
 )
-_commit='a1761cd64ce4a75a9770a954a013422c7910db8b'
+_commit='a2253f34452312d4c3be4f42451591eeaff12467'
 source=("${_realname}"::"git+${url}.git#commit=${_commit}")
-sha256sums=('c7e7d7571bdc4be0d8d8279db01afd4dedf6f4beb31021be550d43c7c0a4745b')
+sha256sums=('3efdb59157486ff4798a16cc7b5c7a66691ca8cbc00eabe1c17a7da3cd32c561')
 
 pkgver() {
   cd "${_realname}"
