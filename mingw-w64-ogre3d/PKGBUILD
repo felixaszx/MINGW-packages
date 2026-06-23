@@ -3,15 +3,16 @@
 _realname=ogre3d
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=14.3.4
-_imgui_ver=1.91.9b
-pkgrel=1
+pkgver=14.5.2
+_imgui_ver=1.92.5
+pkgrel=3
 pkgdesc="A cross-platform 3D game engine (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://www.ogre3d.org/"
 msys2_repository_url="https://github.com/OGRECave/ogre"
 msys2_references=(
+  "cpe: cpe:/a:ogre3d:ogre"
   'archlinux: ogre'
 )
 license=("spdx:MIT")
@@ -46,14 +47,16 @@ source=("https://github.com/OGRECave/ogre/archive/v${pkgver}/${_realname}-${pkgv
         004-use-mingw-w64-directx.patch
         010-missing-include.patch
         015-export-symbols-samples-plugin.patch
-        016-fix-plugins-install-destination.patch)
-sha256sums=('0c74e6ca7bb920ff59c5da8a359e6d96215c7804261301feec4f2e54f206b27d'
-            '8e1bbc76c71d74fef2fb85db7e7ca8eba13d6a86623c54992b60162db554ffdb'
+        016-fix-plugins-install-destination.patch
+        017-samplebrowser-ogrebites-rc.patch)
+sha256sums=('1949fe62f3e4b8043e82e4dc94f9b0ab412a5bffc9e10d3b1dddc80fe54fe1e3'
+            '0eb50fe9aeba1a51f96b5843c7f630a32ed2e9362d693c61b87e4fa870cf826d'
             '81fbe2f951be7f5b5bded24a3050be3188e164d321df9124b5abfb543234a128'
             'c7ca64dbd9a8f3f0271c12739807021a5c0782d254c4142c6e86746a96a44438'
             '2850af66e34003415e86b4f17c24e117b221f64ab98e1cef45b5102c9c48350d'
             '004842e88cbbc76d09356fbddf5bc123b1b0fc7b2e64b8677b2a2316df7d9099'
-            'ed6e383b1b4f1b84f1e93288540789c8fca0693a5dc9e3b4f840a63adbf5daac')
+            'ed6e383b1b4f1b84f1e93288540789c8fca0693a5dc9e3b4f840a63adbf5daac'
+            '3edd27a5b35e794cdd7075bea27ba1455e81c4130afdc039a4675bad8c627b6d')
 
 # Helper macros to help make tasks easier #
 apply_patch_with_msg() {
@@ -70,7 +73,8 @@ prepare() {
     004-use-mingw-w64-directx.patch \
     010-missing-include.patch \
     015-export-symbols-samples-plugin.patch \
-    016-fix-plugins-install-destination.patch
+    016-fix-plugins-install-destination.patch \
+    017-samplebrowser-ogrebites-rc.patch
 }
 
 build() {

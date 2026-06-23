@@ -4,11 +4,12 @@ _realname=zope.interface
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=7.2
-pkgrel=1
+pkgrel=3
 pkgdesc='Interfaces for Python (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/zopefoundation/zope.interface/'
+msys2_repository_url='https://github.com/zopefoundation/zope.interface'
 msys2_documentation_url='https://zopeinterface.readthedocs.io/'
 msys2_references=(
   'archlinux: python-zope-interface'

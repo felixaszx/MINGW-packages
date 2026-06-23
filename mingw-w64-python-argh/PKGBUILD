@@ -4,11 +4,12 @@ _realname=argh
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=0.31.3
-pkgrel=1
+pkgrel=3
 pkgdesc="An unobtrusive argparse wrapper with natural syntax (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/neithere/argh/'
+msys2_repository_url='https://github.com/neithere/argh'
 msys2_references=(
   'purl: pkg:pypi/argh'
 )
@@ -25,7 +26,7 @@ sha256sums=('f30023d8be14ca5ee6b1b3eeab829151d7bbda464ae07dc4dd5347919c5892f9')
 
 prepare() {
   cd "${srcdir}"
-  rm -rf "python-build-${MSYSTEM}" | true
+  rm -rf "python-build-${MSYSTEM}" || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

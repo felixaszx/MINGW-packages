@@ -6,7 +6,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-footprints"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-symbols"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-templates"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-packages3D")
-pkgver=9.0.2
+pkgver=10.0.3
 pkgrel=1
 pkgdesc="Support libraries for KiCad (mingw-w64)"
 arch=('any')
@@ -14,6 +14,7 @@ mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://www.kicad.org/'
 msys2_repository_url="https://gitlab.com/kicad/libraries"
 msys2_references=(
+  "cpe: cpe:/a:kicad:kicad_eda"
   'archlinux: kicad-library'
 )
 license=("spdx:GPL-3.0-or-later")
@@ -25,12 +26,15 @@ source=("https://gitlab.com/kicad/libraries/kicad-footprints/-/archive/${pkgver}
         "https://gitlab.com/kicad/libraries/kicad-symbols/-/archive/${pkgver}/kicad-symbols-${pkgver}.tar.bz2"
         "https://gitlab.com/kicad/libraries/kicad-templates/-/archive/${pkgver}/kicad-templates-${pkgver}.tar.bz2"
         "https://gitlab.com/kicad/libraries/kicad-packages3D/-/archive/${pkgver}/kicad-packages3D-${pkgver}.tar.bz2")
-sha256sums=('e95e015287d68491c17b63f800a3db7639c151d2e8ec432561c8c8b2d1afadd0'
-            '3a15138ac603937f8e144b045908823c6ddf0274e71a8c9745a68894b4be594c'
-            '0e23c346f5fdfbff873c388eabe2dc8dfef9794fd40b3ba392255f02f8e3ba06'
-            '5d969971df4957972fb0aadae5bd03c4d654f6aacf7a95d972f49ac56ea6aee4')
+sha256sums=('f8820fb75e19069d3ecec3f6c45649333d04c5e8d278fc576b7ca82128a02fbc'
+            '12a27b31d14a49f7d035959fe1d3d2a9e3396b1450b1922c771238973b17884b'
+            'd485e3b435920ac196fc71a7b34091b34daf248034873b91969b00b70be79300'
+            '80b50a82c822ab58c5407f353655ba260dad84876ded4327c401a727332323f6')
 
 build() {
+  export PYTHONUTF8=1
+  export PYTHONIOENCODING=utf-8
+
   declare -a _extra_config
   if check_option "debug" "n"; then
     _extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -55,8 +59,6 @@ build() {
 
 package_footprints() {
   pkgdesc="KiCad footprints library (mingw-w64)"
-  conflicts=(${MINGW_PACKAGE_PREFIX}-${_realname}-footprints-git)
-  replaces=(${MINGW_PACKAGE_PREFIX}-${_realname}-footprints-git)
   optdepends=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 
   cd "${srcdir}/build-footprints-${MSYSTEM}"
@@ -66,8 +68,6 @@ package_footprints() {
 
 package_symbols() {
   pkgdesc="KiCad symbols library (mingw-w64)"
-  conflicts=(${MINGW_PACKAGE_PREFIX}-${_realname}-symbols-git)
-  replaces=(${MINGW_PACKAGE_PREFIX}-${_realname}-symbols-git)
   optdepends=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 
   cd "${srcdir}/build-symbols-${MSYSTEM}"
@@ -77,8 +77,6 @@ package_symbols() {
 
 package_templates() {
   pkgdesc="KiCad templates library (mingw-w64)"
-  conflicts=(${MINGW_PACKAGE_PREFIX}-${_realname}-templates-git)
-  replaces=(${MINGW_PACKAGE_PREFIX}-${_realname}-templates-git)
 
   cd "${srcdir}/build-templates-${MSYSTEM}"
 
@@ -87,8 +85,6 @@ package_templates() {
 
 package_packages3D() {
   pkgdesc="KiCad 3D models library (mingw-w64)"
-  conflicts=(${MINGW_PACKAGE_PREFIX}-${_realname}-packages3D-git)
-  replaces=(${MINGW_PACKAGE_PREFIX}-${_realname}-packages3D-git)
 
   cd "${srcdir}/build-packages3D-${MSYSTEM}"
 

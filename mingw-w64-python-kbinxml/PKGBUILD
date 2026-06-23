@@ -4,7 +4,7 @@ _realname=kbinxml
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=2.1
-pkgrel=1
+pkgrel=3
 pkgdesc="Decoder/encoder for Konami's binary XML format (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -13,6 +13,7 @@ msys2_references=(
   'purl: pkg:pypi/kbinxml'
 )
 url='https://github.com/mon/kbinxml'
+msys2_repository_url='https://github.com/mon/kbinxml'
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-python"

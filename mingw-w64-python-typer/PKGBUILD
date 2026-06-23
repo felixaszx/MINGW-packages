@@ -3,29 +3,32 @@
 _realname=typer
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.16.0
+pkgver=0.25.1
 pkgrel=1
 pkgdesc='Build great CLIs. Easy to code. Based on Python type hints (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://typer.tiangolo.com/'
 msys2_repository_url='https://github.com/fastapi/typer'
+msys2_changelog_url='https://github.com/fastapi/typer/blob/master/docs/release-notes.md'
 msys2_references=(
+  'archlinux: python-typer'
+  'gentoo: dev-python/typer'
   'purl: pkg:pypi/typer'
 )
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python"
+         "${MINGW_PACKAGE_PREFIX}-python-annotated-doc"
          "${MINGW_PACKAGE_PREFIX}-python-click"
          "${MINGW_PACKAGE_PREFIX}-python-rich"
          "${MINGW_PACKAGE_PREFIX}-python-shellingham"
          "${MINGW_PACKAGE_PREFIX}-python-typing_extensions")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
-             "${MINGW_PACKAGE_PREFIX}-python-pdm-backend"
-             "${MINGW_PACKAGE_PREFIX}-python-setuptools")
+             "${MINGW_PACKAGE_PREFIX}-python-pdm-backend")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('af377ffaee1dbe37ae9440cb4e8f11686ea5ce4e9bae01b84ae7c63b87f1dd3b')
+sha256sums=('9616eb8853a09ffeabab1698952f33c6f29ffdbceb4eaeecf571880e8d7664cc')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

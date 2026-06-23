@@ -4,11 +4,12 @@ _realname=aenum
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=3.1.15
-pkgrel=1
+pkgrel=3
 pkgdesc="Advanced Enumerations (compatible with Python's stdlib Enum), NamedTuples, and NamedConstants (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/ethanfurman/aenum"
+msys2_repository_url='https://github.com/ethanfurman/aenum'
 msys2_references=(
     'purl: pkg:pypi/aenum'
 )

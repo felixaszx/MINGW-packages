@@ -3,24 +3,23 @@
 _realname=libaec
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=1.1.4
+pkgver=1.1.7
 pkgrel=1
 pkgdesc="Adaptive Entropy Coding library (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
-url="https://gitlab.dkrz.de/k202009/libaec"
+url="https://github.com/Deutsches-Klimarechenzentrum/libaec"
+msys2_repository_url='https://github.com/Deutsches-Klimarechenzentrum/libaec'
 license=('spdx:BSD-2-Clause')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja")
 provides=("${MINGW_PACKAGE_PREFIX}-szip")
 replaces=("${MINGW_PACKAGE_PREFIX}-szip")
-source=("https://gitlab.dkrz.de/k202009/libaec/-/archive/v${pkgver}/libaec-v${pkgver}.tar.bz2")
-sha256sums=('cf869c166656a83857adf62a092311a0069855c6ced3446e3f090a6d52279f65')
+source=("https://github.com/Deutsches-Klimarechenzentrum/libaec/releases/download/v${pkgver}/libaec-${pkgver}.tar.gz")
+sha256sums=('cc7b93be9002e25a88b45d6b8d5f6120756cb5e1000613f91d803ce0beba24d9')
 
 build() {
-  mkdir -p "${srcdir}"/build-${MSYSTEM} && cd "${srcdir}"/build-${MSYSTEM}
-
   declare -a extra_config
   if check_option "debug" "n"; then
     extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -29,22 +28,21 @@ build() {
   fi
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-    ${MINGW_PREFIX}/bin/cmake \
+    cmake \
       -GNinja \
-      -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       "${extra_config[@]}" \
       -DCMAKE_DLL_NAME_WITH_SOVERSION=ON \
       -DBUILD_TESTING=OFF \
-      ../${_realname}-v${pkgver}
+      -S "${_realname}-${pkgver}" \
+      -B "build-${MSYSTEM}"
 
-  ${MINGW_PREFIX}/bin/cmake --build .
+  cmake --build "build-${MSYSTEM}"
 }
 
 package() {
-  cd "${srcdir}"/build-${MSYSTEM}
+  DESTDIR="${pkgdir}" cmake --install "build-${MSYSTEM}"
 
-  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install .
-
-  install -Dm644 "${srcdir}"/${_realname}-v${pkgver}/LICENSE.txt \
+  install -Dm644 "${srcdir}"/${_realname}-${pkgver}/LICENSE.txt \
     "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
 }

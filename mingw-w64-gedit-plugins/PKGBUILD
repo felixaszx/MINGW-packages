@@ -3,12 +3,13 @@
 _realname=gedit-plugins
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=48.2
+pkgver=50.0
 pkgrel=1
 pkgdesc="Collection of plugins for the gedit Text Editor (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://gitlab.gnome.org/World/gedit/gedit-plugins/"
+msys2_repository_url='https://gitlab.gnome.org/World/gedit/gedit-plugins'
 license=('spdx:GPL-2.0-or-later')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-gedit"
@@ -30,7 +31,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-yelp-tools"
 )
 source=("https://gitlab.gnome.org/World/gedit/gedit-plugins/-/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('01489951344218a103aa974cc05e2c3609f342a964743329be05e7fbe470c179')
+sha256sums=('fc9d9593509fbcf6867dc3a995c71ae4ad376279afabeddb3c7e1a6973eecfd5')
 
 build() {
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"

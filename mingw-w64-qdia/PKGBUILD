@@ -1,15 +1,15 @@
-
 # Maintainer: Konstantin Podsvirov <konstantin@podsvirov.su>
 
 _realname=qdia
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.54
+pkgver=0.63
 pkgrel=1
 pkgdesc='Simple schematic/diagram editor (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/sunderme/qdia'
+msys2_repository_url='https://github.com/sunderme/qdia'
 license=('spdx:AGPL-3.0-or-later')
 depends=("${MINGW_PACKAGE_PREFIX}-qt6-svg")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
@@ -17,7 +17,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-qt6-tools")
 source=("${url}/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('cfb438c75cb12bc086f09e0cb1e2588b2549481313ddba6647ab8515de319206')
+sha256sums=('a46dd3c7bc4dd4c4c85c6989deeb101a9e8517d31571092e0132fb7c051baadc')
 
 build() {
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"

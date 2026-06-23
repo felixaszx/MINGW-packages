@@ -1,0 +1,53 @@
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
+
+_realname=dua-cli
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.37.0
+pkgrel=1
+pkgdesc="View disk space usage and delete unwanted data, fast (mingw-w64)"
+arch=('any')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
+url='https://github.com/Byron/dua-cli'
+msys2_repository_url='https://github.com/Byron/dua-cli'
+msys2_changelog_url='https://github.com/Byron/dua-cli/blob/main/CHANGELOG.md'
+msys2_references=(
+  'archlinux: dua-cli'
+  'purl: pkg:cargo/dua-cli'
+)
+license=('spdx:MIT')
+makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
+source=("${msys2_repository_url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=('9373b85fbf626afe7de27d209b1ed9775825b89b211c8480255ac38b1e3e270c')
+
+prepare() {
+  cd "${_realname}-${pkgver}"
+
+  cargo fetch --locked --target "${RUST_CHOST}"
+}
+
+build() {
+  cd "${_realname}-${pkgver}"
+
+  RUSTC_BOOTSTRAP=1 cargo build --release --frozen
+}
+
+check() {
+  cd "${_realname}-${pkgver}"
+
+  RUSTC_BOOTSTRAP=1 cargo test --release --frozen -- --skip "interactive"
+}
+
+package() {
+  cd "${_realname}-${pkgver}"
+
+  RUSTC_BOOTSTRAP=1 \
+  cargo install \
+    --offline \
+    --no-track \
+    --frozen \
+    --path . \
+    --root "${pkgdir}${MINGW_PREFIX}"
+
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+}

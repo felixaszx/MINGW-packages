@@ -4,7 +4,7 @@ _realname=qt6-virtualkeyboard
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc='Virtual keyboard framework (mingw-w64)'
@@ -20,13 +20,14 @@ license=('spdx:GPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND GFDL-
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-qt6-base"
              "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
              "${MINGW_PACKAGE_PREFIX}-qt6-svg"
              "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
              "rsync")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz")
-sha256sums=('80059a38bdb836f0785292396970edc108f477a68d9a35bed8393750de3d281f')
+sha256sums=('a1c6967b326243b2ca8d50bc7b7f7852c3975d9aa6ce4b186ebdf35bb1007e1c')
 
 build() {
   mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}

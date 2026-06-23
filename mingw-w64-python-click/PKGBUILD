@@ -4,7 +4,7 @@ _realname=click
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-python-${_realname}-docs")
-pkgver=8.2.1
+pkgver=8.3.3
 pkgrel=1
 pkgdesc='A simple wrapper around optparse for powerful command line utilities (mingw-w64)'
 arch=('any')
@@ -12,6 +12,8 @@ mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://click.palletsprojects.com/"
 msys2_repository_url='https://github.com/pallets/click'
 msys2_references=(
+  'archlinux: python-click'
+  'gentoo: dev-python/click'
   'purl: pkg:pypi/click'
 )
 license=('spdx:BSD-3-Clause')
@@ -29,8 +31,25 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-sphinx-issues"
   "${MINGW_PACKAGE_PREFIX}-python-sphinx-tabs"
 )
-source=("https://github.com/pallets/click/archive/${pkgver}/${_realname}-$pkgver.tar.gz")
-sha512sums=('420ba1989410af0949317f9651c6b292da68605b86b4cf0e2382eaba1defbc9eb4b9d97e0a71e5cdb51a61a1f578e81fd864e1abb0cdcd0a8ee26a899c802afe')
+checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
+source=("https://github.com/pallets/click/archive/${pkgver}/${_realname}-$pkgver.tar.gz"
+        460af4cfee15072aee432b3c8c38ff58d9b0fe11.patch)
+sha512sums=('e49a773e09d0d4b96c63d36e9d329a143326246696b08a3ef3108dbdd55512f9d7e6749ccb7783f30eb7c6d7b680a34d511866d356907ce3ea77bbbbd98abe80'
+            '5f69e91ba208c8ea573319f1ac7d5fb2bf7c92b5b5b9ec40c1b24a15742ed656d7d090bfa938006e7162b169c7f6e89c18ddff94fdc0ea229fb07efd58bf5da5')
+
+revert_patch_with_msg() {
+  for _patch in "$@"
+  do
+    msg2 "Reverting $_patch"
+    patch -Rbp1 -i "${srcdir}/$_patch"
+  done
+}
+
+prepare() {
+  cd "${srcdir}"/"${_realname}-${pkgver}"
+  revert_patch_with_msg \
+    460af4cfee15072aee432b3c8c38ff58d9b0fe11.patch
+}
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"
@@ -48,6 +67,12 @@ build() {
   _pyver=$(${MINGW_PREFIX}/bin/python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
   PYTHONPATH="${_pkgdir}${MINGW_PREFIX}/lib/python${_pyver}/site-packages" \
     make html
+}
+
+check() {
+  cd "python-build-${MSYSTEM}"
+
+  PYTHONPATH=./src python -m pytest
 }
 
 package_python-click() {

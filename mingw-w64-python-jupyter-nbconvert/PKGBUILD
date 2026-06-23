@@ -3,7 +3,7 @@
 _realname=nbconvert
 pkgbase=mingw-w64-python-jupyter-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-jupyter-${_realname}")
-pkgver=7.16.6
+pkgver=7.17.1
 pkgrel=1
 pkgdesc="Convert Jupyter notebooks to other formats (mingw-w64)"
 arch=('any')
@@ -11,6 +11,7 @@ mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://nbconvert.readthedocs.io/'
 msys2_repository_url='https://github.com/jupyter/nbconvert/'
 msys2_references=(
+  "cpe: cpe:/a:jupyter:nbconvert"
   'archlinux: jupyter-nbconvert'
   'purl: pkg:pypi/nbconvert'
 )
@@ -39,7 +40,7 @@ makedepends=(
     ${MINGW_PACKAGE_PREFIX}-python-hatchling)
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('576a7e37c6480da7b8465eefa66c17844243816ce1ccc372633c6b71c3c0f582')
+sha256sums=('34d0d0a7e73ce3cbab6c5aae8f4f468797280b01fd8bd2ca746da8569eddd7d2')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

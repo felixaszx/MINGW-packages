@@ -1,11 +1,13 @@
-# Maintainer: Shiwei Wang <wsw0108@qq.com>
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
+# Contributor: Shiwei Wang <wsw0108@qq.com>
 
 _realname=tree-sitter
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-lib${_realname}")
-pkgver=0.25.6
+pkgver=0.26.9
 pkgrel=2
+epoch=1
 pkgdesc="An incremental parsing system for programming tools (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -20,17 +22,18 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-rust"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-rust-bindgen"
              "${MINGW_PACKAGE_PREFIX}-libwasmtime")
-checkdepends=('git')
+checkdepends=("${MINGW_PACKAGE_PREFIX}-git")
 source=("https://github.com/tree-sitter/tree-sitter/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('ac6ed919c6d849e8553e246d5cd3fa22661f6c7b6497299264af433f3629957c')
+sha256sums=('8e14780500933f43d86662fcaa1b0ce99ebe9c220f4680bc929dce09a0e0cfc6')
 noextract=("${_realname}-${pkgver}.tar.gz")
 
 prepare() {
   tar -xzf "${_realname}-${pkgver}.tar.gz" || true
   cd "${_realname}-${pkgver}"
 
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {
@@ -43,7 +46,7 @@ build() {
 
   export RUSTFLAGS="${RUSTFLAGS/+crt-static/-crt-static}"
 
-  CFLAGS+=" -Wno-int-conversion"
+  CFLAGS+=" -Wno-int-conversion" \
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
     cmake \
       -GNinja \
@@ -52,7 +55,7 @@ build() {
       -DBUILD_SHARED_LIBS=ON \
       -DTREE_SITTER_FEATURE_WASM=ON \
       -DCMAKE_DLL_NAME_WITH_SOVERSION=ON \
-      -S "${_realname}-${pkgver}/lib" \
+      -S "${_realname}-${pkgver}" \
       -B "build-${MSYSTEM}"
 
   cmake --build "build-${MSYSTEM}"
@@ -61,7 +64,8 @@ build() {
     --frozen \
     --profile optimize \
     --features wasm \
-    --manifest-path "${_realname}-${pkgver}/Cargo.toml"
+    --manifest-path "${_realname}-${pkgver}"/Cargo.toml \
+    --config "${_realname}-${pkgver}"/.cargo/config.toml
 }
 
 package_tree-sitter() {

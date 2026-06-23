@@ -4,7 +4,7 @@
 _realname=tifffile
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2025.6.11
+pkgver=2026.6.1
 pkgrel=1
 pkgdesc="Read and write image data from and to TIFF files (mingw-w64)"
 arch=('any')
@@ -15,6 +15,7 @@ msys2_references=(
   'purl: pkg:pypi/tifffile'
 )
 url='https://github.com/cgohlke/tifffile'
+msys2_repository_url='https://github.com/cgohlke/tifffile'
 license=('spdx:BSD-3-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-python-numpy")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
@@ -26,7 +27,7 @@ optdepends=("${MINGW_PACKAGE_PREFIX}-python-imagecodecs: required only for encod
             "${MINGW_PACKAGE_PREFIX}-python-lxml: required only for validating and printing XML")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('0ece4c2e7a10656957d568a093b07513c0728d30c1bd8cc12725901fffdb7143')
+sha256sums=('626c892c0e899d959b9438e7c0e1491dc154a7fead1f1f37a991724a50eceba9')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

@@ -4,14 +4,15 @@
 _realname=jupyter_core
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=5.8.1
-pkgrel=1
+pkgver=5.9.1
+pkgrel=3
 pkgdesc='A base package on which Jupyter projects rely (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://jupyter-core.readthedocs.io/'
 msys2_repository_url='https://github.com/jupyter/jupyter_core/'
 msys2_references=(
+  "cpe: cpe:/a:jupyter:jupyter_core"
   'archlinux: python-jupyter-core'
   'purl: pkg:pypi/jupyter-core'
 )
@@ -30,10 +31,10 @@ checkdepends=(
     ${MINGW_PACKAGE_PREFIX}-python-nose)
 options=('!strip')
 source=(https://pypi.org/packages/source/${_realname::1}/${_realname/_/-}/${_realname}-${pkgver}.tar.gz)
-sha256sums=('0a5f9706f70e64786b75acba995988915ebd4601c8a52e534a40b51c95f59941')
+sha256sums=('4d09aaff303b9566c3ce657f580bd089ff5c91f5f89cf7d8846c3cdf465b5508')
 
 prepare() {
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

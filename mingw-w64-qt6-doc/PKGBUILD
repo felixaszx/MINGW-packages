@@ -3,13 +3,14 @@
 _realname=qt6-doc
 pkgbase=mingw-w64-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-${_realname}
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://www.qt.io'
 msys2_references=(
+  "archlinux: qt6-doc"
   "cpe: cpe:/a:qt:qt"
 )
 license=(spdx:GFDL-1.3-no-invariants-only)
@@ -35,10 +36,8 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-xmlstarlet")
 groups=(${MINGW_PACKAGE_PREFIX}-qt6)
 _pkgfn="qt-everywhere-src-${_qtver}"
-source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/single/$_pkgfn.tar.xz"
-        001-fix-qtdocs-helpers-cmake.patch)
-sha256sums=('364fde2d7fa42dd7c9b2ea6db3d462dd54f3869e9fd0ca0a0ca62f750cd8329b'
-            '1fdcc019403fabb65d862c7633b26379204459d854cef1c3f8ed89c6ced04e19')
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/single/$_pkgfn.tar.xz")
+sha256sums=('252acef8c5ae68074d91cadba2ee4a83465051bbb970dd26e8f0daa0f3904e03')
 
 # Helper macros to help make tasks easier #
 apply_patch_with_msg() {
@@ -51,15 +50,9 @@ apply_patch_with_msg() {
 
 prepare() {
   cd $srcdir/${_pkgfn}
-
-  cd qtbase
-  apply_patch_with_msg \
-    001-fix-qtdocs-helpers-cmake.patch
 }
 
 build() {
-  mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}
-
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
   ${MINGW_PREFIX}/bin/cmake \
     -Wno-dev \
@@ -78,9 +71,10 @@ build() {
     -DPython3_EXECUTABLE=${MINGW_PREFIX}/bin/python \
     -DFEATURE_gstreamer=OFF \
     -DBUILD_qtwebengine=OFF \
-    ../${_pkgfn}
+    -S ${_pkgfn} \
+    -B build-${MSYSTEM}
 
-    ${MINGW_PREFIX}/bin/cmake --build . --target docs
+    ${MINGW_PREFIX}/bin/cmake --build build-${MSYSTEM} --target docs
 }
 
 package() {

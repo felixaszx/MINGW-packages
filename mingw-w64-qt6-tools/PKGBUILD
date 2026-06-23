@@ -4,7 +4,7 @@ _realname=qt6-tools
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework (Development Tools, QtHelp) (mingw-w64)'
@@ -20,6 +20,7 @@ license=('spdx:LGPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND BSL-
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-qt6-base"
              "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
              "${MINGW_PACKAGE_PREFIX}-qt6-activeqt"
              "${MINGW_PACKAGE_PREFIX}-clang"
@@ -29,9 +30,9 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "rsync")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz"
-        001-appending-qt6-to-remove-qt5-conflict.patch)
-sha256sums=('90c4a562f4ccfd043fd99f34c600853e0b5ba9babc6ec616c0f306f2ce3f4b4c'
-            '1f6e7a9be264e4679090fb0b6f10e702cee099b270802ca08910baed38030b4c')
+        "001-fix-build-with-llvm-22.patch")
+sha256sums=('8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d'
+            '38276f3af78f5519c52fd670aae0f275f9a0a7781db03ca3ba59b8f990d18279')
 
 # Helper macros to help make tasks easier #
 apply_patch_with_msg() {
@@ -44,9 +45,8 @@ apply_patch_with_msg() {
 
 prepare() {
   cd $srcdir/${_pkgfn}
-
   apply_patch_with_msg \
-    001-appending-qt6-to-remove-qt5-conflict.patch
+    001-fix-build-with-llvm-22.patch
 }
 
 build() {
@@ -59,7 +59,6 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     -DQT_FEATURE_clang=ON \
-    -DQT_FEATURE_clangcpp=ON \
     ../${_pkgfn}
 
   ${MINGW_PREFIX}/bin/cmake --build .
@@ -69,15 +68,12 @@ package_qt6-tools() {
   depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
            "${MINGW_PACKAGE_PREFIX}-qt6-base"
            "${MINGW_PACKAGE_PREFIX}-zstd")
-  optdepends=("${MINGW_PACKAGE_PREFIX}-qt6-declarative: for lupdate-qt6, qdoc-qt6 and qdistancefieldgenerator-qt6"
+  optdepends=("${MINGW_PACKAGE_PREFIX}-qt6-declarative: for linguist, lupdate, qdoc and qdistancefieldgenerator"
               "${MINGW_PACKAGE_PREFIX}-qt6-activeqt"
-              "${MINGW_PACKAGE_PREFIX}-clang-libs: for lupdate-qt6 and qdoc-qt6")
+              "${MINGW_PACKAGE_PREFIX}-clang-libs: for qdoc")
   groups=("${MINGW_PACKAGE_PREFIX}-qt6")
 
   DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install build-${MSYSTEM}
-
-  # Restore qtdiag6
-  ln -s "${pkgdir}"${MINGW_PREFIX}/bin/qtdiag-qt6 "${pkgdir}"${MINGW_PREFIX}/bin/qtdiag6.exe
 
   # Seperate debug-info files
   rsync -armR --remove-source-files --include="*/" --include="*.debug" --exclude="*" --prune-empty-dirs "${pkgdir}"/.${MINGW_PREFIX} "${srcdir}"/${MSYSTEM}-debug/

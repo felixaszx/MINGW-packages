@@ -4,12 +4,13 @@
 _realname=pyqt-builder
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=1.18.2
-pkgrel=1
+pkgver=1.19.1
+pkgrel=2
 pkgdesc="The PEP 517 compliant PyQt build system (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/Python-PyQt/PyQt-builder"
+msys2_repository_url='https://github.com/Python-PyQt/PyQt-builder'
 msys2_documentation_url="https://pyqt-builder.readthedocs.io"
 msys2_references=(
   'purl: pkg:pypi/pyqt-builder'
@@ -25,7 +26,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
 options=(!strip)
 source=("https://pypi.io/packages/source/P/PyQt-builder/pyqt_builder-${pkgver}.tar.gz"
         001-mingw-python.patch)
-sha256sums=('56dfea461484a87a8f0c8b0229190defc436d7ec5de71102e20b35e5639180bc'
+sha256sums=('6af6646ba29668751b039bfdced51642cb510e300796b58a4d68b7f956a024d8'
             'f373ea9e84c0340a425ba795b2a3eacabf1e5ec289c13661ba6d34ff373dffb8')
 
 prepare() {
@@ -33,7 +34,7 @@ prepare() {
   patch -p1 -i "${srcdir}/001-mingw-python.patch"
 
   cd "${srcdir}"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname/-/_}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

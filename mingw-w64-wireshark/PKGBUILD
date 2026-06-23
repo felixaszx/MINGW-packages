@@ -3,8 +3,8 @@
 _realname=wireshark
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=4.4.7
-pkgrel=1
+pkgver=4.7.0
+pkgrel=2
 pkgdesc="Network traffic and protocol analyzer/sniffer (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -37,6 +37,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-bcg729"
          "${MINGW_PACKAGE_PREFIX}-pcre2"
          "${MINGW_PACKAGE_PREFIX}-qt6-base"
          "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
+         "${MINGW_PACKAGE_PREFIX}-qt6-svg"
          "${MINGW_PACKAGE_PREFIX}-qt6-5compat"
          "${MINGW_PACKAGE_PREFIX}-sbc"
          "${MINGW_PACKAGE_PREFIX}-snappy"
@@ -51,8 +52,16 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-qt6-tools")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist")
-source=("https://www.wireshark.org/download/src/${_realname}-${pkgver}.tar.xz")
-sha256sums=('5644143fed6363fa6c0cf58c2a6fe9ba0922efaea8f981c7228260bf46f1494b')
+source=("https://2.na.dl.wireshark.org/src/all-versions/${_realname}-${pkgver}.tar.xz"
+        "https://gitlab.com/wireshark/wireshark/-/commit/7142b0d66fe0ac56bd4e9940b54830f984d7600e.patch")
+sha256sums=('f292fbdba6b148c0e122cef00f1304f2f2ba88ac6f895de9f460784d93cf7a6f'
+            '1ab4d90346f2efa683570a5852bc3f5c14463bc4fe5bb7f44fc2fa994bd2be38')
+
+prepare() {
+  cd "${_realname}-${pkgver}"
+
+  patch -p1 -i "${srcdir}/7142b0d66fe0ac56bd4e9940b54830f984d7600e.patch"
+}
 
 build() {
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"

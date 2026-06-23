@@ -1,14 +1,16 @@
-# Maintainer: Naveen M K <naveen521kk@gmail.com>
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
+# Contributor: Naveen M K <naveen521kk@gmail.com>
 
 _realname=dust
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=1.2.1
+pkgver=1.2.4
 pkgrel=1
 pkgdesc="A more intuitive version of du in rust (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/bootandy/dust'
+msys2_repository_url='https://github.com/bootandy/dust'
 msys2_references=(
   'archlinux: dust'
   'purl: pkg:cargo/du-dust'
@@ -16,24 +18,24 @@ msys2_references=(
 license=('spdx:Apache-2.0')
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz"
-        "ntapi-rs.tar.gz::https://crates.io/api/v1/crates/ntapi/0.4.1/download"
+        "ntapi-rs.tar.gz::https://static.crates.io/crates/ntapi/0.4.2/download"
         "ntapi-link-ntdll-arm64.patch")
-sha256sums=('d8ac1a78287a9ea9e6a0e350886dbef8902f5f1dcba9bbc25afafe2ed2ca0a95'
-            'e8a3895c6391c39d7fe7ebc444a87eb2991b2a0bc718fdabd071eec617fc68e4'
+sha256sums=('2f6768534bd01727234e67f1dd3754c9547aa18c715f6ee52094e881ebac50e3'
+            'c70f219e21142367c70c0b30c6a9e3a14d55b4d12a204d897fbec83a0363f081'
             '9994d5b61f020f85f67df54c56c793bd4faf41e39b62ddd4e67c482b9a11b73e')
 
 prepare() {
   cd "${_realname}-${pkgver}"
 
-  patch -d ../ntapi-0.4.1 -i ../ntapi-link-ntdll-arm64.patch
+  patch -d ../ntapi-0.4.2 -i ../ntapi-link-ntdll-arm64.patch
   cat >> Cargo.toml <<END
 
 [patch.crates-io]
-ntapi = { path = "../ntapi-0.4.1" }
+ntapi.path = "../ntapi-0.4.2"
 END
 
   cargo update -p ntapi
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {

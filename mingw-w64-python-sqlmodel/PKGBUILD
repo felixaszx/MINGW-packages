@@ -3,12 +3,13 @@
 _realname=sqlmodel
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.0.24
+pkgver=0.0.38
 pkgrel=1
 pkgdesc='SQLModel, SQL databases in Python, designed for simplicity, compatibility, and robustness (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
-url='https://github.com/tiangolo/sqlmodel'
+url='https://sqlmodel.tiangolo.com/'
+msys2_repository_url='https://github.com/fastapi/sqlmodel'
 msys2_references=(
   'purl: pkg:pypi/sqlmodel'
 )
@@ -20,10 +21,10 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-pdm-backend")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname/-/_}-${pkgver}.tar.gz")
-sha256sums=('cc5c7613c1a5533c9c7867e1aab2fd489a76c9e8a061984da11b4e613c182423')
+sha256sums=('d583ec237b14103809f74e8630032bc40ab68cd6b754a610f0813c56911a547b')
 
 prepare() {
-  rm -rf "python-build-${MSYSTEM}" | true
+  rm -rf "python-build-${MSYSTEM}" || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

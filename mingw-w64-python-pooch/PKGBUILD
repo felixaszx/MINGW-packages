@@ -4,7 +4,7 @@ _realname=pooch
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=1.8.2
-pkgrel=2
+pkgrel=4
 pkgdesc='Python library for fetching and caching data files (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -27,7 +27,7 @@ source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realna
 sha256sums=('76561f0de68a01da4df6af38e9955c4c9d1a5c90da73f7e40276a5728ec83d10')
 
 prepare() {
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 
   # Set version for setuptools_scm

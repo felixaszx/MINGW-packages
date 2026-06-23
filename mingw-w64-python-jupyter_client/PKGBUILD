@@ -4,8 +4,8 @@
 _realname=jupyter_client
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=8.6.3
-pkgrel=2
+pkgver=8.8.0
+pkgrel=1
 pkgdesc="The reference implementation of the Jupyter protocol (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -26,19 +26,14 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-traitlets")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-hatchling"
-             "${MINGW_PACKAGE_PREFIX}-python-installer"
-             "${MINGW_PACKAGE_PREFIX}-python-setuptools"
-             "${MINGW_PACKAGE_PREFIX}-python-setuptools-scm")
+             "${MINGW_PACKAGE_PREFIX}-python-installer")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('35b3a0947c4a6e9d589eb97d7d4cd5e90f910ee73101611f01283732bd6d9419')
+sha256sums=('d556811419a4f2d96c869af34e854e3f059b7cc2d6d01a9cd9c85c267691be3e')
 
 prepare() {
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
-
-  # Set version for setuptools_scm
-  export SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver}
 }
 
 build() {

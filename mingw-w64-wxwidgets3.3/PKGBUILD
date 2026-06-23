@@ -15,8 +15,8 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-wxwidgets${_wx_basever}-common"
          "${MINGW_PACKAGE_PREFIX}-wxwidgets${_wx_basever}-gtk3"
          "${MINGW_PACKAGE_PREFIX}-wxwidgets${_wx_basever}-qt-libs"
          "${MINGW_PACKAGE_PREFIX}-wxwidgets${_wx_basever}-qt")
-pkgver=${_wx_basever}.0
-pkgrel=2
+pkgver=${_wx_basever}.2
+pkgrel=3
 pkgdesc="A C++ library that lets developers create applications for Windows, Linux and UNIX (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
@@ -43,21 +43,17 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-libwebp"
   "${MINGW_PACKAGE_PREFIX}-pcre2"
   "${MINGW_PACKAGE_PREFIX}-zlib"
-  "${MINGW_PACKAGE_PREFIX}-qt5-base"
+  "${MINGW_PACKAGE_PREFIX}-qt6-base"
 )
 #options=('!strip' 'debug') # Best options for debugging CodeLite crashes
 source=(
   https://github.com/wxWidgets/wxWidgets/releases/download/v${pkgver}${_wx_buildver}/${_realname}-${pkgver}${_wx_buildver}.tar.bz2
   001-wxWidgets-3.0.2-relocate-prefix-in-bin-wx-config.patch
-  002-do-not-use-MSVC_NAMING-on-mingw.patch
-  003-install-dlls-on-bin.patch
   004-use-copy-instead-of-symlink-on-windows.patch
 )
-sha256sums=('492f5eb8a58715f2602f31025c3eaa20d71a3ec8e052c7a9d33153966b4badca'
+sha256sums=('50a28cb668de47b0e006cd6ebed8cf4f76c1cac6116fb3c978c44478219103f2'
             '5160ce46b7dc0958691ea2c5d6da50179152d580e80bc0aab63751cef192f285'
-            'f570ae8602c8280a9c4a46d38c65b7eb9bc4425953676a51bee6d83c2755de59'
-            '43773166a27ead78fe8c44a338a7c23c00dc537a4a6b8e9f68a7e47432d387c2'
-            '7c7c14acd8785a3b346e159dd09cfe3084786c4445067f9cc5f5b17efb4f197b')
+            'e8ab872af602083dcfa687d4d7567ec4232d6866f02101a30103afe1229fb95d')
 
 apply_patch_with_msg() {
   for _patch in "$@"
@@ -75,8 +71,6 @@ prepare() {
     001-wxWidgets-3.0.2-relocate-prefix-in-bin-wx-config.patch
 
   apply_patch_with_msg \
-    002-do-not-use-MSVC_NAMING-on-mingw.patch \
-    003-install-dlls-on-bin.patch \
     004-use-copy-instead-of-symlink-on-windows.patch
 }
 
@@ -116,6 +110,7 @@ build() {
     -DCMAKE_CXX_STANDARD=17
     -DwxBUILD_INSTALL_PLATFORM_SUBDIR=OFF
     -DwxBUILD_INSTALL=ON
+    -DwxBUILD_WIN32_MSVC_NAMING=OFF
     -DwxUSE_IFF=ON
     -DwxUSE_GRAPHICS_CONTEXT=ON
     -DwxUSE_GRAPHICS_DIRECT2D=ON
@@ -123,7 +118,6 @@ build() {
     -DwxBUILD_PRECOMP=OFF
     -DwxBUILD_TESTS=OFF
     -DwxUSE_LIBLZMA=ON
-    -DwxUSE_WEBREQUEST_CURL=ON
     -DwxUSE_WEBREQUEST_WINHTTP=ON
     -DwxUSE_STACKWALKER=ON
     -DwxUSE_DBGHELP=ON
@@ -160,6 +154,7 @@ build() {
         cmake \
           -DBUILD_SHARED_LIBS=${_is_shared} \
           -DwxBUILD_SHARED=${_is_shared} \
+          -DwxUSE_WEBREQUEST_CURL=${_is_shared} \
           -DwxBUILD_TOOLKIT=${_toolkit} \
           -DwxUSE_EXPAT=${_is_external} \
           -DwxUSE_LIBJPEG=${_is_external} \
@@ -180,14 +175,6 @@ build() {
 
     done
   done
-}
-
-check() {
-  cd "${srcdir}/build-msw-${MSYSTEM}-shared/samples"    && make -k --jobs=1 || true
-#  cd "${srcdir}/build-msw-${MSYSTEM}-shared/tests"      && make -k --jobs=1 || true
-
-#  cd "${srcdir}"/build-gtk3-${MSYSTEM}-shared/samples   && make -k --jobs=1 # || true
-#  cd "${srcdir}"/build-gtk3-${MSYSTEM}-shared/tests     && make -k --jobs=1 # || true
 }
 
 package_wxwidgets3.3-common() {
@@ -287,7 +274,6 @@ package_wxwidgets3.3-msw() {
             "${MINGW_PACKAGE_PREFIX}-wxwidgets-msw")
   conflicts=("${MINGW_PACKAGE_PREFIX}-wxwidgets-msw")
 
-
   mkdir -p "${pkgdir}"${MINGW_PREFIX}/lib
   cp -a --recursive "${srcdir}/install-msw-${MSYSTEM}-static${MINGW_PREFIX}/lib/wx/" \
       "${pkgdir}"${MINGW_PREFIX}/lib
@@ -323,6 +309,14 @@ package_wxwidgets3.3-msw() {
     sed -s "s| -mwindows||g" -i "${pkgdir}${MINGW_PREFIX}/bin/wx-config-static"
     sed -s "s| -mwindows||g" -i "${pkgdir}${MINGW_PREFIX}/lib/wx/config/msw-unicode-${_wx_basever}"
     sed -s "s| -mwindows||g" -i "${pkgdir}${MINGW_PREFIX}/lib/wx/config/msw-unicode-static-${_wx_basever}"
+  fi
+
+  # CLANG gives warnings on "-lpthread" in c**flags option
+  if [[ ${MSYSTEM} == CLANG* ]]; then
+    sed -s "s|_cppflags -lpthread|_cppflags|g" -i "${pkgdir}${MINGW_PREFIX}/bin/wx-config"
+    sed -s "s|_cppflags -lpthread|_cppflags|g" -i "${pkgdir}${MINGW_PREFIX}/bin/wx-config-static"
+    sed -s "s|_cppflags -lpthread|_cppflags|g" -i "${pkgdir}${MINGW_PREFIX}/lib/wx/config/msw-unicode-${_wx_basever}"
+    sed -s "s|_cppflags -lpthread|_cppflags|g" -i "${pkgdir}${MINGW_PREFIX}/lib/wx/config/msw-unicode-static-${_wx_basever}"
   fi
 
   # create wx-config copy with version file suffix
@@ -386,7 +380,7 @@ package_wxwidgets3.3-gtk3() {
 package_wxwidgets3.3-qt-libs() {
   pkgdesc="Qt implementated shared libraries for wxwidgets ${_wx_basever} (mingw-w64)"
   depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
-           "${MINGW_PACKAGE_PREFIX}-qt5-base"
+           "${MINGW_PACKAGE_PREFIX}-qt6-base"
            "${MINGW_PACKAGE_PREFIX}-libjpeg-turbo"
            "${MINGW_PACKAGE_PREFIX}-libpng"
            "${MINGW_PACKAGE_PREFIX}-libtiff"

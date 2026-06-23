@@ -10,6 +10,7 @@ pkgdesc="A high-quality data compression program (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://sourceware.org/bzip2/"
+msys2_repository_url='https://sourceware.org/git/?p=bzip2.git'
 msys2_references=(
   "cpe: cpe:/a:bzip:bzip2"
 )
@@ -28,12 +29,12 @@ sha256sums=('ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269'
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   # remove files that are created by patches.
-  rm -rf README.CYGMING | true
-  rm -rf aclocal.m4 | true
-  rm -rf configure.ac | true
-  rm -rf libbz2.def.in | true
-  rm -rf bzip2.pc.in | true
-  rm -rf Makefile.in | true
+  rm -rf README.CYGMING || true
+  rm -rf aclocal.m4 || true
+  rm -rf configure.ac || true
+  rm -rf libbz2.def.in || true
+  rm -rf bzip2.pc.in || true
+  rm -rf Makefile.in || true
 
   patch -p1 -i "$srcdir/"bzip2-cygming-1.0.6.src.all.patch
   patch -p1 -i "$srcdir/"bzip2-buildsystem.all.patch

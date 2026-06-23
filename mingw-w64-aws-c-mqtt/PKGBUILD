@@ -3,12 +3,13 @@
 _realname=aws-c-mqtt
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.11.0
+pkgver=0.15.2
 pkgrel=1
 pkgdesc='C99 implementation of the MQTT 3.1.1 specification (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/awslabs/aws-c-mqtt'
+msys2_repository_url='https://github.com/awslabs/aws-c-mqtt'
 msys2_references=(
   'archlinux: aws-c-mqtt'
 )
@@ -19,7 +20,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja")
 source=("https://github.com/awslabs/aws-c-mqtt/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('3854664c13896b6de3d56412f928435a4933259cb7fe62b10c1f497e6999333c')
+sha256sums=('66f3f5edff4ad1f765a86d3342b6017d0f29f950c1c24f8c1edacdc895202edc')
 
 build() {
   declare -a _extra_config

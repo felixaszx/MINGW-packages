@@ -1,5 +1,6 @@
---- a/extern/glog/CMakeLists.txt
-+++ b/extern/glog/CMakeLists.txt
+diff -Naur blender-5.1.1/extern/glog/CMakeLists.txt blender-5.1.1-patched/extern/glog/CMakeLists.txt
+--- blender-5.1.1/extern/glog/CMakeLists.txt	2026-04-27 11:58:37.795953500 +0300
++++ blender-5.1.1-patched/extern/glog/CMakeLists.txt	2026-04-27 11:59:08.675849200 +0300
 @@ -75,6 +75,7 @@
    list(APPEND INC
      src/windows
@@ -8,9 +9,10 @@
    if(MSVC)
      # Suppress warning about google::LogMessageFatal::~LogMessageFatal
      # not returning.
---- a/intern/cycles/app/CMakeLists.txt
-+++ b/intern/cycles/app/CMakeLists.txt
-@@ -99,7 +99,7 @@
+diff -Naur blender-5.1.1/intern/cycles/app/CMakeLists.txt blender-5.1.1-patched/intern/cycles/app/CMakeLists.txt
+--- blender-5.1.1/intern/cycles/app/CMakeLists.txt	2026-04-27 11:58:44.572430700 +0300
++++ blender-5.1.1-patched/intern/cycles/app/CMakeLists.txt	2026-04-27 11:59:08.678334600 +0300
+@@ -96,7 +96,7 @@
    add_executable(cycles ${SRC} ${INC} ${INC_SYS})
    unset(SRC)
  
@@ -19,41 +21,21 @@
  
    if(APPLE)
      if(WITH_CYCLES_STANDALONE_GUI)
---- a/intern/cycles/subd/CMakeLists.txt
-+++ b/intern/cycles/subd/CMakeLists.txt
-@@ -26,7 +26,7 @@
- )
- 
+diff -Naur blender-5.1.1/intern/cycles/subd/CMakeLists.txt blender-5.1.1-patched/intern/cycles/subd/CMakeLists.txt
+--- blender-5.1.1/intern/cycles/subd/CMakeLists.txt	2026-04-27 11:58:44.512875300 +0300
++++ blender-5.1.1-patched/intern/cycles/subd/CMakeLists.txt	2026-04-27 11:59:08.682367500 +0300
+@@ -30,6 +30,7 @@
  set(LIB
--
-+  ${OPENSUBDIV_LIBRARIES}
+   cycles_scene
+   bf::dependencies::openimageio
++  bf::dependencies::optional::opensubdiv
  )
  
  include_directories(${INC})
---- a/intern/cycles/scene/CMakeLists.txt
-+++ b/intern/cycles/scene/CMakeLists.txt
-@@ -119,7 +119,7 @@
-   list(APPEND LIB
-     ${OPENCOLORIO_LIBRARIES}
-   )
--  if(WIN32 AND NOT USD_OVERRIDE_OPENCOLORIO)
-+  if(MSVC AND NOT USD_OVERRIDE_OPENCOLORIO)
-     add_definitions(-DOpenColorIO_SKIP_IMPORTS)
-   endif()
- endif()
---- a/intern/cycles/util/CMakeLists.txt
-+++ b/intern/cycles/util/CMakeLists.txt
-@@ -32,6 +32,7 @@
- 
- set(LIB
-   ${TBB_LIBRARIES}
-+  ${OPENIMAGEIO_LIBRARIES}
-   ${ZSTD_LIBRARIES}
- )
- 
---- a/intern/ghost/CMakeLists.txt
-+++ b/intern/ghost/CMakeLists.txt
-@@ -492,6 +492,7 @@
+diff -Naur blender-5.1.1/intern/ghost/CMakeLists.txt blender-5.1.1-patched/intern/ghost/CMakeLists.txt
+--- blender-5.1.1/intern/ghost/CMakeLists.txt	2026-04-27 11:58:44.106029100 +0300
++++ blender-5.1.1-patched/intern/ghost/CMakeLists.txt	2026-04-27 11:59:08.687814400 +0300
+@@ -441,6 +441,7 @@
      intern/GHOST_WindowWin32.hh
      intern/GHOST_Wintab.hh
    )
@@ -61,7 +43,7 @@
  
    list(APPEND SRC
      intern/GHOST_ContextWGL.cc
-@@ -505,6 +506,7 @@
+@@ -454,6 +455,7 @@
  
        intern/GHOST_ImeWin32.hh
      )
@@ -69,20 +51,23 @@
    endif()
  
    if(WITH_INPUT_NDOF)
---- a/source/blender/blenlib/CMakeLists.txt
-+++ b/source/blender/blenlib/CMakeLists.txt
-@@ -470,6 +470,8 @@
-   )
+diff -Naur blender-5.1.1/source/blender/blenlib/CMakeLists.txt blender-5.1.1-patched/source/blender/blenlib/CMakeLists.txt
+--- blender-5.1.1/source/blender/blenlib/CMakeLists.txt	2026-04-27 11:58:40.594418600 +0300
++++ blender-5.1.1-patched/source/blender/blenlib/CMakeLists.txt	2026-04-27 11:59:08.692851900 +0300
+@@ -454,6 +454,9 @@
    list(APPEND LIB
+     bf_intern_uriconvert
      bf_intern_utfconv
 +    version
 +    dbghelp
++    shlwapi
      dxgi
    )
    list(APPEND SRC
---- a/source/blender/editors/interface/CMakeLists.txt
-+++ b/source/blender/editors/interface/CMakeLists.txt
-@@ -147,6 +147,10 @@
+diff -Naur blender-5.1.1/source/blender/editors/interface/CMakeLists.txt blender-5.1.1-patched/source/blender/editors/interface/CMakeLists.txt
+--- blender-5.1.1/source/blender/editors/interface/CMakeLists.txt	2026-04-27 11:58:41.070920200 +0300
++++ blender-5.1.1-patched/source/blender/editors/interface/CMakeLists.txt	2026-04-27 11:59:08.696311800 +0300
+@@ -151,6 +151,10 @@
    add_definitions(-DWITH_PYTHON)
  endif()
  
@@ -93,11 +78,12 @@
  if(WITH_INPUT_IME)
    add_definitions(-DWITH_INPUT_IME)
  endif()
---- a/source/blender/editors/space_spreadsheet/CMakeLists.txt
-+++ b/source/blender/editors/space_spreadsheet/CMakeLists.txt
-@@ -70,6 +70,10 @@
-   add_definitions(-DWITH_OPENVDB ${OPENVDB_DEFINITIONS})
- endif()
+diff -Naur blender-5.1.1/source/blender/editors/space_spreadsheet/CMakeLists.txt blender-5.1.1-patched/source/blender/editors/space_spreadsheet/CMakeLists.txt
+--- blender-5.1.1/source/blender/editors/space_spreadsheet/CMakeLists.txt	2026-04-27 11:58:41.023178400 +0300
++++ blender-5.1.1-patched/source/blender/editors/space_spreadsheet/CMakeLists.txt	2026-04-27 11:59:08.699303200 +0300
+@@ -56,6 +56,10 @@
+   PRIVATE bf::windowmanager
+ )
  
 +if(WITH_TBB)
 +  add_definitions(-DWITH_TBB)
@@ -106,34 +92,10 @@
  blender_add_lib(bf_editor_space_spreadsheet "${SRC}" "${INC}" "${INC_SYS}" "${LIB}")
  
  # RNA_prototypes.hh dna_type_offsets.h
---- a/source/blender/python/generic/CMakeLists.txt
-+++ b/source/blender/python/generic/CMakeLists.txt
-@@ -37,6 +37,7 @@
- )
- 
- set(LIB
-+  ${OPENGL_gl_LIBRARY}
-   ${PYTHON_LINKFLAGS}
-   ${PYTHON_LIBRARIES}
-   PRIVATE bf::blenkernel
---- a/source/blender/render/CMakeLists.txt
-+++ b/source/blender/render/CMakeLists.txt
-@@ -95,6 +95,12 @@
-   add_definitions(-DWITH_FREESTYLE)
- endif()
- 
-+if(WITH_OPENCOLORIO)
-+  list(APPEND LIB
-+    ${OPENCOLORIO_LIBRARIES}
-+  )
-+endif()
-+
- if(WITH_HYDRA)
-   add_subdirectory(hydra)
- endif()
---- a/source/creator/CMakeLists.txt
-+++ b/source/creator/CMakeLists.txt
-@@ -362,6 +362,9 @@
+diff -Naur blender-5.1.1/source/creator/CMakeLists.txt blender-5.1.1-patched/source/creator/CMakeLists.txt
+--- blender-5.1.1/source/creator/CMakeLists.txt	2026-04-27 11:58:38.055413000 +0300
++++ blender-5.1.1-patched/source/creator/CMakeLists.txt	2026-04-27 11:59:08.705415200 +0300
+@@ -361,6 +361,9 @@
          ${CMAKE_SOURCE_DIR}/release/windows/icons/blender.exe.manifest
        )
      endif()
@@ -143,3 +105,37 @@
      target_compile_definitions(blender-launcher PRIVATE -D_UNICODE -DUNICODE)
      target_link_libraries(blender-launcher pathcch)
    endif()
+diff -Naur blender-5.1.1/build_files/cmake/platform/dependency_targets.cmake blender-5.1.1-patched/build_files/cmake/platform/dependency_targets.cmake
+--- blender-5.1.1/build_files/cmake/platform/dependency_targets.cmake	2026-04-28 14:36:27.496694900 +0300
++++ blender-5.1.1-patched/build_files/cmake/platform/dependency_targets.cmake	2026-04-28 14:36:37.191079900 +0300
+@@ -408,7 +408,7 @@
+   endif()
+   target_include_directories(bf_deps_optional_audaspace SYSTEM INTERFACE ${AUDASPACE_C_INCLUDE_DIRS} ${AUDASPACE_PY_INCLUDE_DIRS})
+   if(WITH_SYSTEM_AUDASPACE)
+-    target_link_libraries(bf_deps_optional_audaspace INTERFACE ${AUDASPACE_C_LIBRARIES} ${AUDASPACE_PY_LIBRARIES})
++    target_link_libraries(bf_deps_optional_audaspace INTERFACE ${AUDASPACE_LIBRARIES} ${AUDASPACE_C_LIBRARIES} ${AUDASPACE_PY_LIBRARIES})
+   else()
+     target_link_libraries(bf_deps_optional_audaspace INTERFACE audaspace audaspace-py)
+   endif()
+diff -Naur blender-5.1.1/source/blender/editors/space_file/CMakeLists.txt blender-5.1.1-patched/source/blender/editors/space_file/CMakeLists.txt
+--- blender-5.1.1/source/blender/editors/space_file/CMakeLists.txt	2026-04-28 14:39:19.923035100 +0300
++++ blender-5.1.1-patched/source/blender/editors/space_file/CMakeLists.txt	2026-04-28 14:39:45.379081700 +0300
+@@ -73,6 +73,7 @@
+   add_definitions(-DNOMINMAX)
+   list(APPEND LIB
+     PRIVATE bf::intern::utfconv
++    mpr
+   )
+ endif()
+ 
+diff -Naur blender-5.1.1/source/blender/imbuf/intern/format_avif.cc blender-5.1.1-patched/source/blender/imbuf/intern/format_avif.cc
+--- blender-5.1.1/source/blender/imbuf/intern/format_avif.cc	2026-04-29 12:26:38.993733300 +0300
++++ blender-5.1.1-patched/source/blender/imbuf/intern/format_avif.cc	2026-04-29 12:26:41.040777200 +0300
+@@ -8,6 +8,7 @@
+ 
+ #include <cstring>
+ 
++#undef FMT_HEADER_ONLY
+ #include <fmt/format.h>
+ 
+ #include "oiio/openimageio_support.hh"

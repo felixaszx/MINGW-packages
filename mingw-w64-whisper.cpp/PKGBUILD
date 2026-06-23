@@ -4,13 +4,13 @@ _realname=whisper.cpp
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 epoch=1
-_pkgver=1.7.6
-pkgver=1.7.6.r42.gbca021c9
+pkgver=1.9.1.r41.g5ed76e9a0
 pkgrel=1
 pkgdesc="Port of OpenAI's Whisper model in C/C++ (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64' 'mingw64')
 url='https://github.com/ggml-org/whisper.cpp'
+msys2_repository_url='https://github.com/ggml-org/whisper.cpp'
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-cc-libs"
@@ -23,9 +23,10 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-ninja"
   "git"
 )
-_commit=bca021c9740b267c2973fba56555be052006023a
+_commit=5ed76e9a079962f1c85cfce44edd325c27ef1f97
 source=("git+https://github.com/ggml-org/whisper.cpp#commit=${_commit}")
-sha256sums=('292ba251c6f80f2861854a3dc16a7eb30f55d0f32d9e902f8332a0c046249d79')
+#source=("https://github.com/ggml-org/whisper.cpp/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=('05540674a90b3b7c9c7ae8a65a574331dee41211c5c7fc83df174dadc83a64db')
 
 pkgver() {
   cd "${_realname}"
@@ -33,8 +34,6 @@ pkgver() {
 }
 
 build() {
-  mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
-
   declare -a extra_config
   if check_option "debug" "n"; then
     extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -56,15 +55,14 @@ build() {
       -DWHISPER_BUILD_TESTS=OFF \
       -DWHISPER_ALL_WARNINGS=OFF \
       "${extra_config[@]}" \
-      ../${_realname}
+      -S ${_realname} \
+      -B build-${MSYSTEM}
 
-  cmake --build .
+  cmake --build build-${MSYSTEM}
 }
 
 package() {
-  cd "${srcdir}/build-${MSYSTEM}"
-
-  DESTDIR="${pkgdir}" cmake --install .
+  DESTDIR="${pkgdir}" cmake --install build-${MSYSTEM}
 
   # Rename output files by prefixing them with whisper (if not already prefixed and if not DLL)
   for i in "${pkgdir}"${MINGW_PREFIX}/bin/*.{exe,py,sh}; do

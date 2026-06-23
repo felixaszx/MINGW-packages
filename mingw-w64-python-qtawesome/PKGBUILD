@@ -3,13 +3,14 @@
 _realname=qtawesome
 pkgbase=mingw-w64-python-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-python-${_realname}
-pkgver=1.4.0
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='FontAwesome icons in PyQt and PySide applications (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 license=('spdx:MIT')
 url='https://github.com/spyder-ide/qtawesome'
+msys2_repository_url='https://github.com/spyder-ide/qtawesome'
 msys2_references=(
   'purl: pkg:pypi/qtawesome'
 )
@@ -20,7 +21,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=(!strip)
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('783e414d1317f3e978bf67ea8e8a1b1498bad9dbd305dec814027e3b50521be6')
+sha256sums=('b2bf9351beb335095006892796f072ffd9755a2d7e5113dc71918dcd9ba4ef4a')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

@@ -1,9 +1,10 @@
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
 
 _realname=tree-sitter-c
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.24.1
-pkgrel=1
+pkgver=0.24.2
+pkgrel=2
 pkgdesc='C grammar for tree-sitter (mingw-w64)'
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
@@ -17,13 +18,15 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
   "${MINGW_PACKAGE_PREFIX}-cmake"
   "${MINGW_PACKAGE_PREFIX}-tree-sitter"
+  "${MINGW_PACKAGE_PREFIX}-nodejs"
 )
-source=("https://github.com/tree-sitter/${_realname}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('25dd4bb3dec770769a407e0fc803f424ce02c494a56ce95fedc525316dcf9b48')
+source=("${_realname}-${pkgver}.tar.gz::${msys2_repository_url}/releases/download/v${pkgver}/${_realname}.tar.gz")
+sha256sums=('f3a2cdfbca39c79f60baf2ef62b42084c609782c76485de457ba36ff65d51baf')
+noextract=("${_realname}-${pkgver}.tar.gz")
 
 prepare() {
-  cd "${_realname}-${pkgver}"
-  tree-sitter generate src/grammar.json
+  mkdir -p "${_realname}-${pkgver}"
+  tar -xf "${_realname}-${pkgver}.tar.gz" -C "${_realname}-${pkgver}" || true
 }
 
 build() {
@@ -32,8 +35,6 @@ build() {
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -Wno-dev \
       -DCMAKE_BUILD_TYPE=None \
-      -DCMAKE_SHARED_LIBRARY_SUFFIX_C=.so \
-      -DCMAKE_INSTALL_BINDIR=lib \
       -S "${_realname}-${pkgver}" \
       -B "build-${MSYSTEM}"
 
@@ -45,7 +46,7 @@ package() {
 
   # To add library to neovim runtime path
   mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser"
-  cp "${pkgdir}${MINGW_PREFIX}/lib/lib${_realname}.so" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}.so"
+  ln "${pkgdir}${MINGW_PREFIX}/bin/lib${_realname}.dll" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}.so"
 
   install -Dm644 "${_realname}-${pkgver}"/LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }

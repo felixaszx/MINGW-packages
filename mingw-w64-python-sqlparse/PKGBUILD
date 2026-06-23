@@ -3,26 +3,26 @@
 _realname=sqlparse
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.5.3
-pkgrel=1
+pkgver=0.5.5
+pkgrel=2
 pkgdesc="Non-validating SQL parser for Python (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
   'purl: pkg:pypi/sqlparse'
   "cpe: cpe:/a:sqlparse_project:sqlparse"
 )
 url='https://github.com/andialbrecht/sqlparse'
+msys2_repository_url='https://github.com/andialbrecht/sqlparse'
 license=('spdx:BSD-3-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
-             "${MINGW_PACKAGE_PREFIX}-python-flit-core"
              "${MINGW_PACKAGE_PREFIX}-python-hatchling")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
 options=(!strip)
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272')
+sha256sums=('e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

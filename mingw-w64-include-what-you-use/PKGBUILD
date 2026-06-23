@@ -3,12 +3,12 @@
 _realname=include-what-you-use
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.24
+pkgver=0.26
 pkgrel=1
 pkgdesc="A tool for use with clang to analyze #includes in C and C++ source files (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
-url='http://include-what-you-use.org'
+url='https://include-what-you-use.org'
 msys2_repository_url="https://github.com/include-what-you-use/include-what-you-use"
 msys2_references=(
   'aur: include-what-you-use'
@@ -24,7 +24,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-llvm"
              "${MINGW_PACKAGE_PREFIX}-clang-tools-extra")
 source=("https://github.com/${_realname}/${_realname}/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('897b4c864a983f493c8efef4a1a9a2d429fd7ead1011f7a41743ed7b6dbe8c2e')
+sha256sums=('ca3f157a5e6bf293cfb2fea585b103ec87245d02eaee0b6ab832665e740016eb')
 
 build() {
   declare -a extra_config
@@ -50,5 +50,6 @@ build() {
 package() {
   DESTDIR="${pkgdir}" cmake --install build-${MSYSTEM}
 
-  install -Dm644 "${_realname}-${pkgver}/LICENSE.TXT" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  install -Dm644 "${_realname}-${pkgver}"/LICENSE.TXT \
+    "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
 }

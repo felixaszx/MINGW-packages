@@ -5,12 +5,13 @@ pkgbase=mingw-w64-${_realname}
 pkgname=(${MINGW_PACKAGE_PREFIX}-shiboken6
          ${MINGW_PACKAGE_PREFIX}-${_realname}
          ${MINGW_PACKAGE_PREFIX}-${_realname}-tools)
-pkgver=6.9.1
+pkgver=6.11.1
 pkgrel=1
 pkgdesc="Enables the use of Qt6 APIs in Python applications (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://doc.qt.io/qtforpython/"
+msys2_repository_url="https://code.qt.io/cgit/pyside/pyside-setup.git"
 msys2_references=(
   'archlinux: pyside6'
   'purl: pkg:pypi/pyside6'
@@ -38,7 +39,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-qt6-location"
              "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
              "${MINGW_PACKAGE_PREFIX}-qt6-networkauth"
-             $([[ ${MSYSTEM} == MINGW64 || ${CARCH} == aarch64 ]] || echo "${MINGW_PACKAGE_PREFIX}-qt6-pdf")
+             $([[ ${MSYSTEM} == MINGW64 ]] || echo "${MINGW_PACKAGE_PREFIX}-qt6-pdf")
              "${MINGW_PACKAGE_PREFIX}-qt6-quick3d"
              "${MINGW_PACKAGE_PREFIX}-qt6-positioning"
              #"${MINGW_PACKAGE_PREFIX}-qt6-remoteobjects"
@@ -55,20 +56,33 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
 _pkgfn=pyside-setup-everywhere-src-${pkgver}
 source=(https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-${pkgver}-src/${_pkgfn}.tar.xz
         001-fix-building-on-mingw.patch
-        002-fix-build-qtexampleicons.patch)
-sha256sums=('04c712c5b9234add0d9b5aa3c01a0caede64a55b496127751f5d52a230cff748'
-            '5f71b618e0ad687e9282fa4b8c3815beaf69b78666516bfce57cb039822f4ac6'
-            'ad762d906e5e736b87e8fe92efd42045fe51206e6b6845e37d298a15a53ccfa3')
+        004-fix-hardcoded-compiler.patch
+        https://invent.kde.org/qt/pyside/pyside-setup/-/commit/d252378a.patch
+        https://invent.kde.org/qt/pyside/pyside-setup/-/commit/71c4d175.patch)
+sha256sums=('6ffd9835bb0dd2c56f061d62f1616bb1707cfc0202b80e3165d6be087f3965e2'
+            '8faabf95564166ee9b439f40904ed8846bf90d37e8a84479e7f89dbdf238c38b'
+            '764c0f7157727a75567da77164e4f9084686d1065df4326727744ce7a85c3380'
+            '3790abe835c71f4ac88d63091fc0d7c7e6b43d461b80e4b5a222acc0bb7f1606'
+            '314a60d250cfdb085f2c4becd7affea8c9a54614f4a631085c7d634e6be10fb8')
+
+apply_patch_with_msg() {
+  for _patch in "$@"
+  do
+    msg2 "Applying ${_patch}"
+    patch -Nbp1 -i "${srcdir}/${_patch}"
+  done
+}
 
 prepare() {
   cd "${srcdir}"/${_pkgfn}
-  patch -p1 -i "${srcdir}"/001-fix-building-on-mingw.patch
-  patch -p1 -i "${srcdir}"/002-fix-build-qtexampleicons.patch
+  apply_patch_with_msg \
+    001-fix-building-on-mingw.patch \
+    004-fix-hardcoded-compiler.patch \
+    d252378a.patch \
+    71c4d175.patch
 }
 
 build() {
-  mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}
-
   declare -a extra_config
   if check_option "debug" "n"; then
     extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -91,10 +105,11 @@ build() {
     -DPython_EXECUTABLE=${MINGW_PREFIX}/bin/python \
     -DNUMPY_INCLUDE_DIR=${MINGW_PREFIX}/include/python${_pyver}/numpy/_core/include \
     -DSKIP_MODULES="DBus;RemoteObjects" \
-    ../${_pkgfn}
+    -S ${_pkgfn} \
+    -B build-${MSYSTEM}
 
   PYTHONPATH="${srcdir}"/build-${MSYSTEM}/sources \
-  ${MINGW_PREFIX}/bin/cmake --build .
+  ${MINGW_PREFIX}/bin/cmake --build build-${MSYSTEM}
 }
 
 package_shiboken6() {
@@ -106,6 +121,7 @@ package_shiboken6() {
            "${MINGW_PACKAGE_PREFIX}-libxslt")
 
   DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install build-${MSYSTEM}/sources/shiboken6
+  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install build-${MSYSTEM}/sources/shiboken6_generator
 
   install -Dm644 ${_pkgfn}/sources/shiboken6/COPYING \
     "$pkgdir"${MINGW_PREFIX}/share/licenses/shiboken6/LICENSE

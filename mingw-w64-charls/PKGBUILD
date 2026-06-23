@@ -3,12 +3,13 @@
 _realname=charls
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2.4.2
+pkgver=2.4.4
 pkgrel=1
 pkgdesc="CharLS, a C++ JPEG-LS library implementation (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/team-charls/charls'
+msys2_repository_url='https://github.com/team-charls/charls'
 license=('spdx:BSD-3-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
@@ -16,7 +17,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-ninja")
 source=("https://github.com/team-charls/charls/archive/${pkgver}/${_realname}-${pkgver}.tar.gz"
         "0001-shlib-name.patch")
-sha256sums=('d1c2c35664976f1e43fec7764d72755e6a50a80f38eca70fcc7553cad4fe19d9'
+sha256sums=('fbd712903d61306ad00d5fa5029a9882630c7311ca487f48d2d76000956e8ff9'
             '1aa76a36ae28f3b6108d6f3cfd6e2a4ade4fc73bfc764bd86558f5e976b3558b')
 
 prepare() {

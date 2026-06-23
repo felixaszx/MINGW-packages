@@ -5,11 +5,12 @@ _realname=jupyter_console
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=6.6.3
-pkgrel=5
+pkgrel=7
 pkgdesc='An IPython-like terminal frontend for Jupyter kernels in any language (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/jupyter/jupyter_console'
+msys2_repository_url='https://github.com/jupyter/jupyter_console'
 msys2_references=(
   'archlinux: jupyter_console'
   'purl: pkg:pypi/jupyter-console'
@@ -35,7 +36,7 @@ sha256sums=('566a4bf31c87adbfadf22cdf846e3069b59a71ed5da71d6ba4d8aaad14a53539')
 
 prepare() {
   cd "${srcdir}"
-  rm -rf "python-build-${MSYSTEM}" | true
+  rm -rf "python-build-${MSYSTEM}" || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

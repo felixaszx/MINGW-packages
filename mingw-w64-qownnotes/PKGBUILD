@@ -3,13 +3,14 @@
 _realname=qownnotes
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=25.7.1
+pkgver=26.5.12
 pkgrel=1
 pkgdesc="Plain-text file markdown note taking with Nextcloud/ownCloud integration"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://www.qownnotes.org/'
 msys2_repository_url='https://github.com/pbek/QOwnNotes/'
+msys2_changelog_url='https://www.qownnotes.org/changelog.html'
 msys2_references=(
   'aur: qownnotes'
 )
@@ -32,14 +33,17 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-qt6-tools"
 )
 source=("https://github.com/pbek/QOwnNotes/releases/download/v${pkgver}/qownnotes-${pkgver}.tar.xz"
-        "0001-allow-system-botan.patch")
-sha256sums=('1a90eeef828719ce53fd3c97b13c3bf8dbf0687239d5e2657559a4f9cd75b647'
-            'e332f9ad90713434224f3b1c4b344a9539dfe83acd62cd033490f9d4acf58633')
+        "0001-allow-system-botan.patch"
+        "0002-litehtml-fix-noexcept.patch")
+sha256sums=('c5bedb45cab13b9d6edd90f12253da2bbad4c6c9765b9fbcd6ef0e2cf15280fb'
+            'e332f9ad90713434224f3b1c4b344a9539dfe83acd62cd033490f9d4acf58633'
+            '6baf6b0336e2d3c39ef9f1f781688e401189e0d1956a41f4671008f8f25d1e67')
 
 prepare() {
   cd "${_realname}-${pkgver}"
 
   patch -Np1 -i "${srcdir}/0001-allow-system-botan.patch"
+  patch -Np1 -i "${srcdir}/0002-litehtml-fix-noexcept.patch"
 }
 
 build() {
@@ -58,6 +62,7 @@ build() {
       -DQON_QT6_BUILD=ON \
       -DBUILD_WITH_SYSTEM_BOTAN=ON \
       -DBUILD_WITH_LIBGIT2=ON \
+      -DBUILD_WITH_ASPELL=ON \
       -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
       -S "${_realname}-${pkgver}" \
       -B "build-${MSYSTEM}"

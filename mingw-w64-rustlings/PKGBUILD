@@ -3,20 +3,23 @@
 _realname=rustlings
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=6.4.0
+pkgver=6.5.0
 pkgrel=1
 pkgdesc='Small exercises to get you used to reading and writing Rust code (mingw-w64)'
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://rustlings.rust-lang.org/'
 msys2_repository_url='https://github.com/rust-lang/rustlings'
+msys2_changelog_url='https://github.com/rust-lang/rustlings/blob/main/CHANGELOG.md'
 msys2_references=(
+  'anitya: 376085'
+  'archlinux: rustlings'
   'purl: pkg:cargo/rustlings'
 )
 license=('spdx:MIT')
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 source=("$msys2_repository_url/archive/v$pkgver/$_realname-$pkgver.tar.gz")
-sha256sums=('314b284c611b2938cb43abec186f9fc7fdb5975436f3aa06c58e09457d7cd82a')
+sha256sums=('d3b394c77145b272bba4f4b94435dd6b1a6accb9e2531238391c5fa42ccb348d')
 noextract=("${_realname}-${pkgver}.tar.gz")
 
 prepare() {
@@ -26,12 +29,12 @@ prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   cp dev/Cargo.toml dev-Cargo.toml
 
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {
   cd "${srcdir}"
-  rm -rf "build-${MSYSTEM}" | true
+  rm -rf "build-${MSYSTEM}" || true
   cp -r "${_realname}-${pkgver}" "build-${MSYSTEM}"
   cd "build-${MSYSTEM}"
 
@@ -45,7 +48,7 @@ check() {
 
   "${MINGW_PREFIX}/bin/cargo.exe" test \
     --release \
-    --frozen | true
+    --frozen || true
 }
 
 package() {

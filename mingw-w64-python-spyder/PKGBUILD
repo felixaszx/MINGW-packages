@@ -3,7 +3,7 @@
 _realname=spyder
 pkgbase=mingw-w64-python-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-python-${_realname}
-pkgver=6.0.7
+pkgver=6.1.4
 pkgrel=1
 pkgdesc='The Scientific Python Development Environment (mingw-w64)'
 arch=('any')
@@ -18,7 +18,6 @@ license=('spdx:MIT')
 depends=(
     ${MINGW_PACKAGE_PREFIX}-python
     ${MINGW_PACKAGE_PREFIX}-python-aiohttp
-    ${MINGW_PACKAGE_PREFIX}-python-atomicwrites
     ${MINGW_PACKAGE_PREFIX}-python-asyncssh
     ${MINGW_PACKAGE_PREFIX}-python-bcrypt
     ${MINGW_PACKAGE_PREFIX}-python-chardet
@@ -44,6 +43,7 @@ depends=(
     ${MINGW_PACKAGE_PREFIX}-python-lsp-black
     ${MINGW_PACKAGE_PREFIX}-python-pyls-spyder
     ${MINGW_PACKAGE_PREFIX}-python-pyqt5
+    ${MINGW_PACKAGE_PREFIX}-python-lsp-ruff
     ${MINGW_PACKAGE_PREFIX}-python-lsp-server
     ${MINGW_PACKAGE_PREFIX}-python-pygithub
     ${MINGW_PACKAGE_PREFIX}-python-pyzmq
@@ -73,12 +73,12 @@ optdepends=(
 )
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
-             "${MINGW_PACKAGE_PREFIX}-python-setuptools")
+             "${MINGW_PACKAGE_PREFIX}-python-packaging")
 options=(!strip)
 source=(https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz
         spyder-requirements-fix.patch)
-sha256sums=('431a0c46a34a6490664763d47b1e48f3be03e75e7e43c37adb239022e8b062cf'
-            'a5ea57d8458b2d069abd8c72f763b63a25aed1ad62e27a94a0c17d253a0c5fbf')
+sha256sums=('1c6139710af071053fc3149181f8604e5f3a3a4fa1054073a649b969fef2de32'
+            '8202b6e606b8adb2e6a9a308f775e90dd263ce874e8636e01540f2b609975bfd')
 
 prepare() {
   cd ${_realname}-${pkgver}

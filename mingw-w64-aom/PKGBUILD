@@ -3,8 +3,8 @@
 _realname=aom
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=3.12.1
-pkgrel=2
+pkgver=3.14.1
+pkgrel=1
 pkgdesc='AV1 codec library (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -17,6 +17,11 @@ msys2_references=(
   "gentoo: media-libs/libaom"
   "cpe: cpe:/a:aomedia:aomedia"
 )
+msys2_ignore_vulnerabilities=(
+  "CVE-2021-30475" # fixed since 3.1.0
+  "CVE-2021-30474" # fixed since 3.1.0
+  "CVE-2021-30473" # fixed since 3.1.0
+)
 license=('spdx:BSD-2-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
          "${MINGW_PACKAGE_PREFIX}-libwinpthread")
@@ -24,12 +29,12 @@ makedepends=("perl"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              $( [[ "${CARCH}" != "i686" \
                    && "${CARCH}" != "x86_64" ]] \
-                || echo "${MINGW_PACKAGE_PREFIX}-yasm" )
+                || echo "${MINGW_PACKAGE_PREFIX}-nasm" )
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-python")
 source=("https://storage.googleapis.com/aom-releases/libaom-${pkgver}.tar.gz"{,.asc})
-sha256sums=('9e9775180dec7dfd61a79e00bda3809d43891aee6b2e331ff7f26986207ea22e'
+sha256sums=('44bf90dbd23e734d50e70a8c41c285193922938bd0d3bc2ee56764d181d55ef5'
             'SKIP')
 validpgpkeys=('B002F08B74A148DAA01F7123A48E86DB0B830498') # AOMedia release signing key <av1-discuss@aomedia.org>
 

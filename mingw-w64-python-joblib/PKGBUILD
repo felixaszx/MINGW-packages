@@ -3,8 +3,8 @@
 _realname=joblib
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=1.5.1
-pkgrel=1
+pkgver=1.5.3
+pkgrel=2
 pkgdesc="Set of tools to provide lightweight pipelining in Python (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -14,6 +14,7 @@ msys2_references=(
   "cpe: cpe:/a:joblib_project:joblib"
 )
 msys2_repository_url='https://github.com/joblib/joblib/'
+msys2_changelog_url='https://github.com/joblib/joblib/blob/main/CHANGES.rst'
 url='https://joblib.readthedocs.io/'
 license=('spdx:BSD-3-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
@@ -23,7 +24,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('f4f86e351f39fe3d0d32a9f2c3d8af1ee4cec285aafcb27003dda5205576b444')
+sha256sums=('8561a3269e6801106863fd0d6d84bb737be9e7631e33aaed3fb9ce5953688da3')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

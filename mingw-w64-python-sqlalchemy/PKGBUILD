@@ -3,13 +3,14 @@
 _realname=sqlalchemy
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2.0.41
-pkgrel=2
+pkgver=2.0.49
+pkgrel=1
 pkgdesc="Python SQL toolkit and Object Relational Mapper (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://www.sqlalchemy.org/'
 msys2_repository_url="https://github.com/sqlalchemy/sqlalchemy"
+msys2_changelog_url='https://docs.sqlalchemy.org/en/20/changelog/changelog_20.html'
 msys2_references=(
   'purl: pkg:pypi/sqlalchemy'
   "cpe: cpe:/a:sqlalchemy:sqlalchemy"
@@ -27,7 +28,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
               "${MINGW_PACKAGE_PREFIX}-python-mock")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('edba70118c4be3c2b1f90754d308d0b79c6fe2c0fdc52d8ddf603916f83f4db9')
+sha256sums=('d15950a57a210e36dd4cec1aac22787e2a4d57ba9318233e2ef8b2daf9ff2d5f')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

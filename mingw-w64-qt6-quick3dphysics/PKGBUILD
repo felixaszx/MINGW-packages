@@ -4,7 +4,7 @@ _realname=qt6-quick3dphysics
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc='Qt Quick3D Physics Extensions (mingw-w64)'
@@ -20,12 +20,14 @@ license=('spdx:GPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND GFDL-
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-qt6-base"
+             "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
              "${MINGW_PACKAGE_PREFIX}-qt6-quick3d"
              "${MINGW_PACKAGE_PREFIX}-qt6-shadertools"
              "rsync")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz")
-sha256sums=('66e8365eb8c409a8426dec13a83203879f31845d555bf7632ce0728e8ddca24f')
+sha256sums=('d1086d6f014e7b698945cf0ee1dc3e43545ed7dcf0b5e501c0d6836a96ac79af')
 
 build() {
   mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}

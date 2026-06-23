@@ -3,12 +3,13 @@
 _realname=pyspnego
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.11.2
-pkgrel=2
+pkgver=0.12.1
+pkgrel=1
 pkgdesc="Windows Negotiate Authentication Client and Server (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/jborean93/pyspnego'
+msys2_repository_url='https://github.com/jborean93/pyspnego'
 msys2_references=(
   'archlinux: python-pyspnego'
   'purl: pkg:pypi/pyspnego'
@@ -25,7 +26,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('994388d308fb06e4498365ce78d222bf4f3570b6df4ec95738431f61510c971b')
+sha256sums=('ff4fb6df38202a012ea2a0f43091ae9680878443f0ea61c9ea0e2e8152a4b810')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

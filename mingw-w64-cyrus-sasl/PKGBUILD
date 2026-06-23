@@ -25,11 +25,12 @@ _realname=cyrus-sasl
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 pkgver=2.1.28
-pkgrel=3
+pkgrel=5
 pkgdesc="Cyrus Simple Authentication Service Layer (SASL) library (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://www.cyrusimap.org/sasl/"
+msys2_repository_url='https://github.com/cyrusimap/cyrus-sasl'
 msys2_references=(
   "cpe: cpe:/a:carnegie_mellon_university:cyrus-sasl"
   "cpe: cpe:/a:cyrus:sasl"
@@ -135,7 +136,9 @@ build() {
     --without-des \
     --without-authdaemond \
     --with-dblib=gdbm \
-    --disable-sample
+    --disable-sample \
+    CPPFLAGS="-DPROTOTYPES=1" \
+    CFLAGS="-Wno-error=incompatible-pointer-types"
 
   make
 }

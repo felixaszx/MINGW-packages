@@ -3,15 +3,16 @@
 _realname=libsigc++
 pkgbase=mingw-w64-${_realname}-3.0
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-3.0"
-pkgver=3.6.0
+pkgver=3.8.1
 pkgrel=1
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}3")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}3")
 replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}3")
 pkgdesc="Callback Framework for C++ - V3 (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://libsigcplusplus.github.io/libsigcplusplus/"
+msys2_repository_url='https://github.com/libsigcplusplus/libsigcplusplus'
 license=('spdx:LGPL-2.1-or-later')
 makedepends=("${MINGW_PACKAGE_PREFIX}-meson"
              "${MINGW_PACKAGE_PREFIX}-pkgconf"
@@ -19,12 +20,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-meson"
              "mm-common")
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 source=("https://github.com/libsigcplusplus/libsigcplusplus/releases/download/${pkgver}/${_realname}-${pkgver}.tar.xz")
-sha256sums=('c3d23b37dfd6e39f2e09f091b77b1541fbfa17c4f0b6bf5c89baef7229080e17')
-
-prepare() {
-  cd "${srcdir}/${_realname}-${pkgver}"
-
-}
+sha256sums=('4ff41d1474e501d3baeced4c989d154338206ac16471e614376496b63fe252d1')
 
 build() {
   MSYS2_ARG_CONV_EXCL="--prefix=" \

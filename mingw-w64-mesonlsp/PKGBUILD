@@ -4,11 +4,12 @@ _realname=mesonlsp
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=4.3.7
-pkgrel=5
+pkgrel=10
 pkgdesc='Meson language server (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64')
 url=https://github.com/JCWasmx86/mesonlsp
+msys2_repository_url='https://github.com/JCWasmx86/mesonlsp'
 license=('spdx:GPL-3.0-or-later')
 depends=("${MINGW_PACKAGE_PREFIX}-curl"
          "${MINGW_PACKAGE_PREFIX}-libarchive"
@@ -22,7 +23,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-nlohmann-json"
              "${MINGW_PACKAGE_PREFIX}-gtest"
              'git')
-optdepends=('git: for `git` wrapper'
+optdepends=("${MINGW_PACKAGE_PREFIX}-git: for \`git\` wrapper"
             'mercurial: for `hg` wrapper'
             'subversion: for `svn` wrapper')
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-lsprotocol"

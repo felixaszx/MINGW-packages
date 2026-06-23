@@ -3,22 +3,14 @@
 _realname=darktable
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=5.2.0
-pkgrel=1
+pkgver=5.4.1
+pkgrel=5
 pkgdesc="darktable is an open source photography workflow application and raw developer (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://www.darktable.org/'
 msys2_repository_url='https://github.com/darktable-org/darktable'
 license=('spdx:GPL-3.0-or-later')
-makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-cmake"
-             "${MINGW_PACKAGE_PREFIX}-ninja"
-             "${MINGW_PACKAGE_PREFIX}-libxslt"
-             "${MINGW_PACKAGE_PREFIX}-python-jsonschema"
-             "${MINGW_PACKAGE_PREFIX}-gettext-tools"
-             "intltool"
-             "po4a")
 depends=("${MINGW_PACKAGE_PREFIX}-curl"
          "${MINGW_PACKAGE_PREFIX}-drmingw"
          "${MINGW_PACKAGE_PREFIX}-exiv2"
@@ -44,7 +36,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-curl"
          "${MINGW_PACKAGE_PREFIX}-libtiff"
          "${MINGW_PACKAGE_PREFIX}-libwebp"
          "${MINGW_PACKAGE_PREFIX}-libxml2"
-         "${MINGW_PACKAGE_PREFIX}-lua"
+         "${MINGW_PACKAGE_PREFIX}-lua54"
          "${MINGW_PACKAGE_PREFIX}-omp"
          "${MINGW_PACKAGE_PREFIX}-openexr"
          "${MINGW_PACKAGE_PREFIX}-openjpeg2"
@@ -54,10 +46,18 @@ depends=("${MINGW_PACKAGE_PREFIX}-curl"
          "${MINGW_PACKAGE_PREFIX}-SDL2"
          "${MINGW_PACKAGE_PREFIX}-sqlite3"
          "${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-libxslt"
+             "${MINGW_PACKAGE_PREFIX}-python-jsonschema"
+             "${MINGW_PACKAGE_PREFIX}-gettext-tools"
+             "intltool"
+             "po4a")
 # Disable strip option to write backtraces with drmingw
 options=('!strip')
 source=("https://github.com/darktable-org/${_realname}/releases/download/release-${pkgver}/${_realname}-${pkgver}.tar.xz"{,.asc})
-sha256sums=('53a46cd46ef7118485c4abf4ab407c181639bb8634243ec0ed1f7c1e8299bec6'
+sha256sums=('afdc7c88a338a8cd2fac31c8450d076edbf73e956e4307260c83ebc195f845e4'
             'SKIP')
 validpgpkeys=('F10F9686652B0E949FCD94C318DCA123F949BD3B') # Pascal Obry <pascal@obry.net>
 

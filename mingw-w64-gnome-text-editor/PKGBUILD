@@ -3,7 +3,7 @@
 _realname=gnome-text-editor
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=48.3
+pkgver=50.0
 pkgrel=1
 pkgdesc="A simple text editor for the GNOME desktop (mingw-w64)"
 arch=('any')
@@ -31,7 +31,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-gettext-tools"
              "${MINGW_PACKAGE_PREFIX}-itstool")
 source=(https://download.gnome.org/sources/${_realname}/${pkgver%.*}/${_realname}-${pkgver}.tar.xz)
-sha256sums=('3f9e9722394edb4d2145c06d69210b3d3fca5cd2b90d632643be750843d556ba')
+sha256sums=('9dc299da4daa085423b5d48db59f0021ad55e74143a5cb8ab2e5ffe17967f45b')
 
 build() {
   mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}

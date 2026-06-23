@@ -3,12 +3,13 @@
 _realname=rawpy
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.25.0
-pkgrel=2
+pkgver=0.27.0
+pkgrel=1
 pkgdesc='RAW image processing for Python, a wrapper for libraw (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/letmaik/rawpy'
+msys2_repository_url='https://github.com/letmaik/rawpy'
 msys2_documentation_url='https://letmaik.github.io/rawpy/'
 msys2_references=(
   'aur: python-rawpy'
@@ -24,8 +25,10 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-cython"
              "${MINGW_PACKAGE_PREFIX}-pkgconf"
              "${MINGW_PACKAGE_PREFIX}-cc")
-source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('a97feea139a42d89024c983d1321ed5c374a2bdd8cb45f73d6bea37402c08998')
+optdepends=("${MINGW_PACKAGE_PREFIX}-python-opencv: for rawpy.enhance"
+            "${MINGW_PACKAGE_PREFIX}-python-scikit-image: for rawpy.enhance")
+source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
+sha256sums=('45251e46c1d891a62919a4ac200a9828f825e3c59f89cea2f1daee0900ff15ec')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

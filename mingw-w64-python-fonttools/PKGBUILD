@@ -3,16 +3,19 @@
 _realname=fonttools
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=4.58.5
+pkgver=4.63.0
 pkgrel=1
 pkgdesc="Converts OpenType and TrueType fonts to and from XML (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
+  "cpe: cpe:/a:fonttools:fonttools"
   'archlinux: python-fonttools'
+  'gentoo: dev-python/fonttools'
   'purl: pkg:pypi/fonttools'
 )
 msys2_repository_url='https://github.com/fonttools/fonttools/'
+msys2_changelog_url='https://github.com/fonttools/fonttools/blob/main/NEWS.rst'
 url='https://fonttools.readthedocs.io/'
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
@@ -34,7 +37,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pyfilesystem2"
               "${MINGW_PACKAGE_PREFIX}-python-ufolib2")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('b2a35b0a19f1837284b3a23dd64fd7761b8911d50911ecd2bdbaf5b2d1b5df9c')
+sha256sums=('caeb583deeb5168e694b65cda8b4ee62abedfa66cf88488734466f2366b9c4e0')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

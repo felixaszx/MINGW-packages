@@ -4,11 +4,12 @@ _realname=pyswarm
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=0.6
-pkgrel=4
+pkgrel=6
 pkgdesc="Particle swarm optimization (PSO) with constraint support (mingw64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/tisimst/pyswarm"
+msys2_repository_url='https://github.com/tisimst/pyswarm'
 msys2_references=(
   'purl: pkg:pypi/pyswarm'
 )
@@ -23,7 +24,7 @@ source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realna
 sha256sums=('1401E8E39FC624B48DB39F1E928B1FC4D8204B96AA6CE2EF97D192740972F2E1')
 
 prepare() {
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

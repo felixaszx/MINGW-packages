@@ -1,0 +1,56 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# Contributor: Martell Malone <martellmalone@gmail.com>
+
+_realname=tools
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=14.0.0.r98.g19f5121a2
+pkgrel=1
+_commit='19f5121a2944e61ea5ea31af3667770d51b8ce8c'
+pkgdesc="MinGW-w64 tools (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+url="https://www.mingw-w64.org/"
+msys2_repository_url="https://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-tools/"
+license=('spdx:GPL-3.0-or-later AND LGPL-2.1-or-later')
+provides=("${MINGW_PACKAGE_PREFIX}-${_realname}-git=${pkgver}")
+conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
+replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}-git")
+groups=("${MINGW_PACKAGE_PREFIX}-toolchain")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-autotools"
+             "${MINGW_PACKAGE_PREFIX}-libmangle"
+             "git")
+depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
+options=('!emptydirs')
+source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=$_commit")
+sha256sums=('b79934097d0d3de79dacdbcea4d54dd61b81614b7e4193dcf00e861da06a4c02')
+_tools="gendef genidl genpeimg widl" # genstubdll
+
+pkgver() {
+  cd "${srcdir}/mingw-w64"
+  git describe --long ${_commit} | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+build() {
+  for cur in ${_tools}; do
+    plain "Building ${cur} ..."
+    mkdir -p "${srcdir}"/${MSYSTEM}-${cur} && cd "${srcdir}"/${MSYSTEM}-${cur}
+    "${srcdir}"/mingw-w64/mingw-w64-tools/${cur}/configure \
+      --prefix=${MINGW_PREFIX} \
+      --with-mangle=${MINGW_PREFIX} \
+      --with-widl-includedir=${MINGW_PREFIX}/include
+    make
+  done
+}
+
+package() {
+  for cur in ${_tools}; do
+    plain "Installing ${cur} ..."
+    cd "${srcdir}"/${MSYSTEM}-${cur}
+    make DESTDIR="${pkgdir}" install
+    if [[ -f "${srcdir}/mingw-w64/mingw-w64-tools/${cur}"/COPYING ]]; then
+      install -Dm644 "${srcdir}"/mingw-w64/mingw-w64-tools/${cur}/COPYING "${pkgdir}"${MINGW_PREFIX}/share/licenses/mingw-w64-tools/COPYING.${cur}
+    fi
+  done
+}

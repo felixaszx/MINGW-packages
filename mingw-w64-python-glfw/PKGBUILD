@@ -4,12 +4,13 @@ _basename=pyGLFW
 _realname=glfw
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2.9.0
-pkgrel=1
+pkgver=2.10.0
+pkgrel=3
 pkgdesc='Module for OpenGL, OpenGL ES, Vulkan, window and input support (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/FlorianRhiem/pyGLFW'
+msys2_repository_url='https://github.com/FlorianRhiem/pyGLFW'
 msys2_references=(
   'purl: pkg:pypi/glfw'
 )
@@ -21,7 +22,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools"
              "${MINGW_PACKAGE_PREFIX}-cc")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('077111a150ff09bc302c5e4ae265a5eb6aeaff0c8b01f727f7fb34e3764bb8e2')
+sha256sums=('801e55d8581b34df9aa2cfea43feb06ff617576e2a8cc5dac23ee75b26d10abe')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

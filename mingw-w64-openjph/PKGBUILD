@@ -4,11 +4,11 @@
 _realname=openjph
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.21.3
+pkgver=0.30.1
 pkgrel=1
 pkgdesc="Open-source implementation of HTJ2K (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://openjph.org/"
 msys2_repository_url='https://github.com/aous72/OpenJPH'
 license=("spdx:BSD-2-Clause")
@@ -18,7 +18,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja")
 source=(https://github.com/aous72/OpenJPH/archive/${pkgver}/${_realname}-${pkgver}.tar.gz)
-sha256sums=('4dfa87ec8e28c8a30c038969cdd3084d2e8688b364efd83599c3fa90f29457e2')
+sha256sums=('fb3ccf71af838ed2a42c6ea669308a2adaba115ae9d5862dfb1e2865b43eb5b8')
 
 build() {
   declare -a _extra_config
@@ -29,34 +29,40 @@ build() {
   fi
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake \
-    -G"Ninja" \
-    -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
-    ${_extra_config[@]} \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_SYSTEM_PREFIX_PATH=${MINGW_PREFIX} \
-    -S OpenJPH-${pkgver} \
-    -B build-static-${MSYSTEM}
+    cmake \
+      -GNinja \
+      -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      ${_extra_config[@]} \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DCMAKE_SYSTEM_PREFIX_PATH=${MINGW_PREFIX} \
+      -S OpenJPH-${pkgver} \
+      -B build-static-${MSYSTEM}
 
-  ${MINGW_PREFIX}/bin/cmake --build build-static-${MSYSTEM}
+  cmake --build build-static-${MSYSTEM}
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake \
-    -G"Ninja" \
-    -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
-    -DCMAKE_DLL_NAME_WITH_SOVERSION=ON \
-    ${_extra_config[@]} \
-    -DBUILD_SHARED_LIBS=ON \
-    -DCMAKE_SYSTEM_PREFIX_PATH=${MINGW_PREFIX} \
-    -S OpenJPH-${pkgver} \
-    -B build-shared-${MSYSTEM}
+    cmake \
+      -GNinja \
+      -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      -DCMAKE_DLL_NAME_WITH_SOVERSION=ON \
+      ${_extra_config[@]} \
+      -DBUILD_SHARED_LIBS=ON \
+      -DCMAKE_SYSTEM_PREFIX_PATH=${MINGW_PREFIX} \
+      -S OpenJPH-${pkgver} \
+      -B build-shared-${MSYSTEM}
 
-  ${MINGW_PREFIX}/bin/cmake --build build-shared-${MSYSTEM}
+  cmake --build build-shared-${MSYSTEM}
+}
+
+check() {
+  cmake -DOJPH_BUILD_TESTS=ON -S OpenJPH-${pkgver} -B build-shared-${MSYSTEM}
+  cmake --build build-shared-${MSYSTEM}
+  ctest --test-dir build-shared-${MSYSTEM} --output-on-failure
 }
 
 package() {
-  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install build-static-${MSYSTEM}
-  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --install build-shared-${MSYSTEM}
+  DESTDIR="${pkgdir}" cmake --install build-static-${MSYSTEM}
+  DESTDIR="${pkgdir}" cmake --install build-shared-${MSYSTEM}
 
   install -Dm644 "${srcdir}"/OpenJPH-${pkgver}/LICENSE \
     "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE

@@ -5,11 +5,12 @@ _pyname=python-jsonrpc-server
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=0.4.0
-pkgrel=9
+pkgrel=11
 pkgdesc="Python library implementing asynchronous JSON RPC server (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/palantir/python-jsonrpc-server"
+msys2_repository_url='https://github.com/palantir/python-jsonrpc-server'
 msys2_references=(
   'purl: pkg:pypi/python-jsonrpc-server'
 )
@@ -35,7 +36,7 @@ prepare() {
   cd "${srcdir}"/${_pyname}-${pkgver}
   patch -p1 -i "${srcdir}/002-python-jsonrpc-server-0.4.0-fix-test.patch"
 
-  rm -rf "versioneer.py" | true
+  rm -rf "versioneer.py" || true
 }
 
 build() {

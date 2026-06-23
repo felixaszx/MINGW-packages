@@ -4,7 +4,7 @@ _realname=gsutil
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=5.27
-pkgrel=3
+pkgrel=5
 pkgdesc='A command line tool for interacting with cloud storage services. (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -40,7 +40,7 @@ prepare() {
   sed -e "s|httplib2==0.20.4|httplib2>=0.20.4|g" -i setup.py
 
   cd "$srcdir"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

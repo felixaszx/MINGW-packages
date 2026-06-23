@@ -3,7 +3,7 @@
 _realname=tor
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.4.8.17
+pkgver=0.4.9.8
 pkgrel=1
 pkgdesc="Anonymizing overlay network (mingw-w64)"
 arch=('any')
@@ -16,6 +16,9 @@ msys2_references=(
   "cpe: cpe:/a:tor_project:tor"
   "cpe: cpe:/a:torproject:tor"
 )
+msys2_ignore_vulnerabilities=(
+  "CVE-2017-16541"  # wrong product, tor-browser, not tor
+)
 license=('spdx:BSD-3-Clause')
 depends=("${MINGW_PACKAGE_PREFIX}-libevent"
          "${MINGW_PACKAGE_PREFIX}-openssl"
@@ -27,8 +30,8 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-autotools"
   "${MINGW_PACKAGE_PREFIX}-ca-certificates")
 source=("https://dist.torproject.org/${_realname}-${pkgver}.tar.gz"{,.sha256sum{,.asc}})
-sha256sums=('79b4725e1d4b887b9e68fd09b0d2243777d5ce3cd471e538583bcf6f9d8cdb56'
-            '42460dc325dee5f712c1d8848c34a5c61abb6b2d574ae6f014db280764c02c9c'
+sha256sums=('ac1f394e2dd2ab0877d27d928fd0d9e86662fe3ca6afdffb9fd9b6f0f96d05de'
+            'f0b0b952fcf79e5fe5a9444c9a5aff9b5789cd6445d47dd2274594192df2766c'
             'SKIP')
 # list of keys https://gitlab.torproject.org/tpo/core/tor/-/raw/main/README.md
 validpgpkeys=(

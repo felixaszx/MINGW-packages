@@ -3,26 +3,32 @@
 _realname=filelock
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=3.18.0
+pkgver=3.29.4
 pkgrel=1
 pkgdesc="A platform independent file lock (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
+  'archlinux: python-filelock'
+  'gentoo: dev-python/filelock'
   'purl: pkg:pypi/filelock'
 )
 msys2_repository_url='https://github.com/tox-dev/filelock'
 url='https://py-filelock.readthedocs.io/'
-license=('spdx:Unlicense')
+msys2_changelog_url='https://py-filelock.readthedocs.io/en/latest/changelog.html'
+license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-hatchling"
              "${MINGW_PACKAGE_PREFIX}-python-hatch-vcs")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
-              "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout")
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-asyncio"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-mock"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout"
+              "${MINGW_PACKAGE_PREFIX}-python-virtualenv")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('adbc88eabb99d2fec8c9c1b229b171f18afa655400173ddc653d5d01501fb9f2')
+sha256sums=('10cdb3656fc44541cdf30652a93fb10ec6b05325620eb316bd26893e4201538a')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"
@@ -31,7 +37,7 @@ build() {
 
 check() {
   cd "${srcdir}/python-build-${MSYSTEM}"
-  PYTHONPATH=src ${MINGW_PREFIX}/bin/pytest tests || warning "Tests failed"
+  PYTHONPATH=src ${MINGW_PREFIX}/bin/pytest tests
 }
 
 package() {

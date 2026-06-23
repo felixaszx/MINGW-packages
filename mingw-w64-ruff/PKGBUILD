@@ -1,16 +1,18 @@
-# Maintainer: Christoph Reiter <reiter.christoph@gmail.com>
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
+# Contributor: Christoph Reiter <reiter.christoph@gmail.com>
 
 _realname=ruff
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.12.2
+pkgver=0.15.18
 pkgrel=1
 pkgdesc="An extremely fast Python linter, written in Rust (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://astral.sh/ruff'
 msys2_repository_url='https://github.com/astral-sh/ruff'
+msys2_changelog_url='https://github.com/astral-sh/ruff/blob/main/CHANGELOG.md'
 license=('spdx:MIT')
 msys2_references=(
   'archlinux: ruff'
@@ -22,16 +24,16 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-rust"
   "${MINGW_PACKAGE_PREFIX}-maturin"
   "${MINGW_PACKAGE_PREFIX}-python-installer"
-  'git'
+  "${MINGW_PACKAGE_PREFIX}-git"
 )
 options=('!strip')
 source=("${_realname}-${pkgver}.tar.gz::${msys2_repository_url}/releases/download/${pkgver}/source.tar.gz")
-sha256sums=('ce137f0e699f109622ead0511ad92bca94f461fd1e07261e354b0e81b6edd59b')
+sha256sums=('56527697f2bb417c8dcbeb7c94357171b7e1254ba922cd5c523af67b0b9bd9a6')
 
 prepare() {
   cd "${_realname}-${pkgver}"
 
-  cargo fetch --locked --config='net.git-fetch-with-cli=true'
+  cargo fetch --locked --target "${RUST_CHOST}" --config='net.git-fetch-with-cli=true'
 }
 
 build() {
@@ -39,7 +41,7 @@ build() {
 
   export _PYTHON_HOST_PLATFORM=$(python -c "import sysconfig, sys; sys.stdout.write(sysconfig.get_platform())")
   export WINAPI_NO_BUNDLED_LIBRARIES=1
-  maturin build --release --strip --frozen --all-features
+  maturin build --release --strip --frozen --all-features --target "${RUST_CHOST}"
 }
 
 check() {
@@ -50,10 +52,10 @@ check() {
 }
 
 package_ruff() {
-  install -Dm755 "${_realname}-${pkgver}/target/release/ruff" "${pkgdir}${MINGW_PREFIX}/bin/ruff"
+  install -Dm755 "${_realname}-${pkgver}/target/${RUST_CHOST}/release/ruff" "${pkgdir}${MINGW_PREFIX}/bin/ruff"
   install -Dm644 "${_realname}-${pkgver}/LICENSE" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 
-  local _complete="${_realname}-${pkgver}/target/release/ruff generate-shell-completion"
+  local _complete="${_realname}-${pkgver}/target/${RUST_CHOST}/release/ruff generate-shell-completion"
   $_complete bash | install -Dm644 /dev/stdin "${pkgdir}${MINGW_PREFIX}/share/bash-completion/completions/${_realname}"
   $_complete fish | install -Dm644 /dev/stdin "${pkgdir}${MINGW_PREFIX}/share/fish/vendor_completions.d/${_realname}.fish"
   $_complete zsh | install -Dm644 /dev/stdin "${pkgdir}${MINGW_PREFIX}/share/zsh/site-functions/_${_realname}"

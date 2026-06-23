@@ -3,12 +3,13 @@
 _realname=lazy-object-proxy
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=1.11.0
-pkgrel=1
+pkgver=1.12.0
+pkgrel=3
 pkgdesc="A fast and thorough lazy object proxy (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/ionelmc/python-lazy-object-proxy"
+msys2_repository_url='https://github.com/ionelmc/python-lazy-object-proxy'
 msys2_references=(
   'purl: pkg:pypi/lazy-object-proxy'
 )
@@ -22,7 +23,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
 )
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname//-/_}/${_realname//-/_}-${pkgver}.tar.gz")
-sha256sums=('18874411864c9fbbbaa47f9fc1dd7aea754c86cfde21278ef427639d1dd78e9c')
+sha256sums=('1f5a462d92fd0cfb82f1fab28b51bfb209fabbe6aabf7f0d51472c0c124c0c61')
 
 build() {
   export SETUPTOOLS_SCM_PRETEND_VERSION="${pkgver}"

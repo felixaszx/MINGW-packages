@@ -3,7 +3,7 @@
 _realname=pyinstaller
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=6.14.2
+pkgver=6.21.0
 pkgrel=1
 pkgdesc='Bundles a Python application and all its dependencies into a single package (mingw-w64)'
 arch=('any')
@@ -11,6 +11,7 @@ mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://pyinstaller.org/'
 msys2_repository_url='https://github.com/pyinstaller/pyinstaller'
 msys2_references=(
+  "cpe: cpe:/a:pyinstaller:pyinstaller"
   'purl: pkg:pypi/pyinstaller'
 )
 license=('custom')
@@ -22,18 +23,23 @@ depends=("${MINGW_PACKAGE_PREFIX}-binutils"
          "${MINGW_PACKAGE_PREFIX}-python-pywin32-ctypes"
          "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
+             "${MINGW_PACKAGE_PREFIX}-python-hatchling"
              "${MINGW_PACKAGE_PREFIX}-python-installer")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('142cce0719e79315f0cc26400c2e5c45d9b6b17e7e0491fee444a9f8f16f4917')
+noextract=("${_realname}-${pkgver}.tar.gz")
+sha256sums=('bb9fab705983e393a2d1cac77d6972513057ad800215fd861dc15ff5272e98fd')
 
 if [[ ${CARCH} == aarch64 ]]; then
   source+=("https://files.pythonhosted.org/packages/py3/${_realname::1}/${_realname}/${_realname}-${pkgver}-py3-none-win_arm64.whl")
-  sha256sums+=('69fd11ca57e572387826afaa4a1b3d4cb74927d76f231f0308c0bd7872ca5ac1')
+  sha256sums+=('f13c95c9c03fb567217135919f93815c305813126780b0ed6e0123cb8acaf025')
 fi
 
 prepare() {
-  cd "${_realname}-${pkgver}"/PyInstaller/bootloader
+  export MSYS=winsymlinks:lnk
+  tar zxf "${_realname}-${pkgver}.tar.gz"
+
+  cd "${srcdir}/${_realname}-${pkgver}"/PyInstaller/bootloader
 
   # Remove unused bootloaders
   if [[ ${CARCH} == aarch64 ]]; then

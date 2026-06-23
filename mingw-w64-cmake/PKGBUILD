@@ -9,7 +9,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
            "${MINGW_PACKAGE_PREFIX}-${_realname}-cmcldeps" \
            "${MINGW_PACKAGE_PREFIX}-${_realname}-gui" \
            "${MINGW_PACKAGE_PREFIX}-${_realname}-docs"))
-pkgver=4.0.3
+pkgver=4.3.4
 _rc=""
 _pkgver=${pkgver}${_rc}
 pkgrel=1
@@ -21,6 +21,9 @@ msys2_repository_url="https://gitlab.kitware.com/cmake/cmake"
 msys2_references=(
   'archlinux: cmake'
   "cpe: cpe:2.3:a:cmake_project:cmake"
+)
+msys2_ignore_vulnerabilities=(
+  'CVE-2016-10642' # Only the npm package is affected
 )
 license=("spdx:MIT")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
@@ -52,10 +55,10 @@ source=("https://github.com/Kitware/CMake/releases/download/v${_pkgver}/${_realn
         "0002-Do-not-install-Qt-bundle-in-cmake-gui.patch"
         "0003-fix-find-python-on-mingw-aarch64.patch"
         "0005-Default-to-ninja-generator.patch")
-sha256sums=('8d3537b7b7732660ea247398f166be892fe6131d63cc291944b45b91279f3ffb'
+sha256sums=('fdeff897b9eb49d764539f2b1edc6eb7e1440df325678a97c1978499e931adda'
             '25793edcbac05bb6d17fa9947b52ace4a6b5ccccf7758e22ae9ae022ed089061'
-            'f6cf6a6f2729db2b9427679acd09520af2cd79fc26900b19a49cead05a55cd1a'
-            '557b5cbc05d4d50b3a67a7892391fcaa5cd95c492cdb4338d86305d1f4a3b88a'
+            '07186453f5ca61c0ecffb0c389a850fa40b1882057ff626f0ff5f7183c7864c2'
+            '934fedcea30e57fcf590d777d25decd8fa5d62166186cf464b089d5f59bf4f9d'
             '426818278090704d2a12f62ef3dfd94c47b11fa2784bb842989b7f6a09ee7aa2')
 
 # Helper macros to help make tasks easier #
@@ -66,16 +69,6 @@ apply_patch_with_msg() {
     patch -Np1 -i "${srcdir}/$_patch"
   done
 }
-
-del_file_exists() {
-  for _fname in "$@"
-  do
-    if [ -f $_fname ]; then
-      rm -rf $_fname
-    fi
-  done
-}
-# =========================================== #
 
 prepare() {
   cd ${_realname}-${_pkgver}

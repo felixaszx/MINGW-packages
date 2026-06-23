@@ -4,24 +4,25 @@ _basename=create-tauri-app
 _realname=cargo-${_basename}
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=4.6.0
+pkgver=4.7.0
 pkgrel=1
 pkgdesc="Rapidly scaffold out a new tauri app project (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/tauri-apps/create-tauri-app"
+msys2_repository_url='https://github.com/tauri-apps/create-tauri-app'
 msys2_references=(
   'purl: pkg:cargo/create-tauri-app'
 )
 license=('spdx:MIT OR Apache-2.0')
-makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
+depends=("${MINGW_PACKAGE_PREFIX}-rust")
 source=("${url}/archive/${_basename}-v${pkgver}/${_basename}-${_basename}-v${pkgver}.tar.gz")
-sha256sums=('9d938457bf0efaa691a71b1688bc2f73a8190426c27feb45682120ba65b8ffd2')
+sha256sums=('e727ffc9e95a19cb748e9c9f087ee69869f4ab13c3513db2f282add81cc9b94b')
 
 prepare() {
   cd "${srcdir}/${_basename}-${_basename}-v${pkgver}"
 
-  "${MINGW_PREFIX}/bin/cargo.exe" fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  "${MINGW_PREFIX}/bin/cargo.exe" fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {

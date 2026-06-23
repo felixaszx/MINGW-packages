@@ -3,14 +3,19 @@
 _realname=python-pikepdf
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=9.9.0
-pkgrel=1
+pkgver=10.5.1
+pkgrel=4
 pkgdesc='Read and write PDFs with Python, powered by qpdf'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/pikepdf/pikepdf'
+msys2_repository_url='https://github.com/pikepdf/pikepdf'
 msys2_references=(
+  "anitya: 17724"
   "archlinux: $_realname"
+  "cpe: cpe:2.3:a:pikepdf_project:pikepdf"
+  "gentoo: dev-python/pikepdf"
+  "purl: pkg:pypi/pikepdf"
 )
 license=('spdx:MPL-2.0')
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
@@ -30,14 +35,10 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-hypothesis"
               "${MINGW_PACKAGE_PREFIX}-python-psutil"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist")
 source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('cda2f80b5309cd096cca77c7545e55d139f60d345c15817ef17538376e0dd983')
-
-prepare() {
-  rm -rf python-build-${MSYSTEM} | true
-  cp -r pikepdf-${pkgver} "python-build-${MSYSTEM}"
-}
+sha256sums=('f8d3af1a75aba000beb3fa6a99e0d70b9d8e3bc41848a0963a14ef54ccd2350c')
 
 build() {
+  cp -r pikepdf-${pkgver} "python-build-${MSYSTEM}"
   cd "python-build-${MSYSTEM}"
   python -m build --wheel --no-isolation --skip-dependency-check
 }

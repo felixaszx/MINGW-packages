@@ -2,16 +2,17 @@
 
 _realname=gtk4
 pkgbase=mingw-w64-${_realname}
-pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
-         "${MINGW_PACKAGE_PREFIX}-${_realname}-media-gstreamer")
-pkgver=4.18.6
-pkgrel=2
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=4.22.4
+pkgrel=1
 pkgdesc="GObject-based multi-platform GUI toolkit (v4) (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://www.gtk.org"
 msys2_repository_url="https://gitlab.gnome.org/GNOME/gtk/"
 msys2_references=(
+  'anitya: 13942'
+  'gentoo: gui-libs/gtk'
   "cpe: cpe:/a:gnome:gtk"
   "cpe: cpe:/a:gtk:gtk%2b"
 )
@@ -23,7 +24,6 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-meson"
              "${MINGW_PACKAGE_PREFIX}-python-docutils"
              "${MINGW_PACKAGE_PREFIX}-gi-docgen"
-             "${MINGW_PACKAGE_PREFIX}-gst-plugins-bad-libs"
              "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
              "${MINGW_PACKAGE_PREFIX}-shaderc")
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
@@ -36,19 +36,30 @@ depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
          "${MINGW_PACKAGE_PREFIX}-libepoxy"
          "${MINGW_PACKAGE_PREFIX}-pango"
          "${MINGW_PACKAGE_PREFIX}-vulkan-loader"
+         "${MINGW_PACKAGE_PREFIX}-gst-plugins-bad-libs"
          "${MINGW_PACKAGE_PREFIX}-gtk-update-icon-cache"
-         "${MINGW_PACKAGE_PREFIX}-shared-mime-info"
-         "${MINGW_PACKAGE_PREFIX}-accesskit-c")
+         "${MINGW_PACKAGE_PREFIX}-shared-mime-info")
+conflicts=("${MINGW_PACKAGE_PREFIX}-gtk4-media-gstreamer")
+provides=("${MINGW_PACKAGE_PREFIX}-gtk4-media-gstreamer")
+replaces=("${MINGW_PACKAGE_PREFIX}-gtk4-media-gstreamer")
+optdepends=(
+  "${MINGW_PACKAGE_PREFIX}-gst-plugins-good: plugins required in gtk4-widget-factory"
+)
 source=("https://download.gnome.org/sources/gtk/${pkgver:0:4}/gtk-${pkgver}.tar.xz"
-        "001-fix-font-rendering.patch")
-sha256sums=('e1817c650ddc3261f9a8345b3b22a26a5d80af154630dedc03cc7becefffd0fa'
-            'a2c6e3350bd9c1744da6b7714b25cbd419645b731435f7d295a9f99da3c1479f')
+        "001-fix-font-rendering.patch"
+        "003-default-dcomp-off.patch")
+sha256sums=('51bd9f60c7d23a665a556c7364c21fb2e4e282566b3e7e092455e8f910330893'
+            'a2c6e3350bd9c1744da6b7714b25cbd419645b731435f7d295a9f99da3c1479f'
+            'dda6bbab33b12ce50cb8706e7b9970f040dde4ba7cf2fe89c6f3842809fc0e87')
 
 prepare() {
   cd gtk-${pkgver}
 
   # Re-enables font hinting
   patch -Np1 -i ../001-fix-font-rendering.patch
+
+  # Disable broken dcomp, and fix a missing guard for when it is disabled
+  patch -Np1 -i ../003-default-dcomp-off.patch
 }
 
 build() {
@@ -62,7 +73,7 @@ build() {
   fi
 
   MSYS2_ARG_CONV_EXCL="--prefix=" \
-  ${MINGW_PREFIX}/bin/meson.exe setup \
+  meson setup \
     --prefix="${MINGW_PREFIX}" \
     --wrap-mode=nodownload \
     --auto-features=enabled \
@@ -78,40 +89,13 @@ build() {
     -Dwayland-backend=false \
     -Dwin32-backend=true \
     -Dintrospection=enabled \
-    -Daccesskit=enabled \
     ../gtk-${pkgver}
 
-  ${MINGW_PREFIX}/bin/meson.exe compile
+  meson compile
 }
 
-package_gtk4() {
-  ${MINGW_PREFIX}/bin/meson.exe install -C "${srcdir}/build-${MSYSTEM}" --destdir "${pkgdir}"
+package() {
+  meson install -C "${srcdir}/build-${MSYSTEM}" --destdir "${pkgdir}"
 
   install -Dm644 "${srcdir}/gtk-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
-
-  # split media-gstreamer
-  mkdir -p dest${MINGW_PREFIX}/lib
-  mv "${pkgdir}${MINGW_PREFIX}"/lib/gtk-4.0 dest${MINGW_PREFIX}/lib/gtk-4.0
 }
-
-package_gtk4-media-gstreamer() {
-  pkgdesc+=" (GStreamer media plugin)"
-  optdepends=(
-    "${MINGW_PACKAGE_PREFIX}-gst-plugins-good: plugins required in gtk4-widget-factory"
-  )
-  depends=("${MINGW_PACKAGE_PREFIX}-gtk4"
-           "${MINGW_PACKAGE_PREFIX}-gst-plugins-bad-libs")
-
-  mv dest/* "${pkgdir}"
-}
-
-# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
-# vim: set ft=bash :
-
-# generate wrappers
-for _name in "${pkgname[@]}"; do
-  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
-  _func="$(declare -f "${_short}")"
-  eval "${_func/#${_short}/package_${_name}}"
-done
-# template end;

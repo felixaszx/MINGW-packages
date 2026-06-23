@@ -4,17 +4,19 @@ _realname=llama.cpp
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 epoch=1
-pkgver=b5811
+pkgver=b9748
 pkgrel=1
 pkgdesc="Library and tools for running inference with Meta's LLaMA model (and derivatives) in C/C++ (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64' 'mingw64')
 url="https://github.com/ggml-org/llama.cpp"
+msys2_repository_url='https://github.com/ggml-org/llama.cpp'
 license=('spdx:MIT')
 depends=(
-  "${MINGW_PACKAGE_PREFIX}-curl"
   "${MINGW_PACKAGE_PREFIX}-cc-libs"
+  "${MINGW_PACKAGE_PREFIX}-curl"
   "${MINGW_PACKAGE_PREFIX}-ggml"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
 )
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
@@ -22,11 +24,13 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-ninja"
 )
 source=("https://github.com/ggml-org/llama.cpp/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('0201fa3dd537c55ff36a22e4c108253734c46eafb298de9f49fc9dea0941ea04')
+sha256sums=('3f2b25fb37948e82f7198a8ed1b695a10f0ab15e565db42a13420c871deb5ce3')
+
+prepare() {
+  cd ${_realname}-${pkgver}
+}
 
 build() {
-  mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
-
   declare -a extra_config
   if check_option "debug" "n"; then
     extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -34,6 +38,7 @@ build() {
     extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
   fi
 
+  CXXFLAGS+=" -D_WIN32_WINNT=0x0A00" \
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
     cmake \
       -GNinja \
@@ -43,20 +48,19 @@ build() {
       -DLLAMA_BUILD_EXAMPLES=ON \
       -DLLAMA_ALL_WARNINGS=OFF \
       -DLLAMA_BUILD_TESTS=OFF \
-      -DLLAMA_CURL=ON \
+      -DLLAMA_OPENSSL=ON \
       -DLLAMA_USE_SYSTEM_GGML=ON \
-      ../${_realname}-${pkgver}
+      -S ${_realname}-${pkgver} \
+      -B build-${MSYSTEM}
 
-  cmake --build .
+  cmake --build build-${MSYSTEM}
 }
 
 package() {
-  cd "${srcdir}/build-${MSYSTEM}"
-
-  DESTDIR="${pkgdir}" cmake --install .
+  DESTDIR="${pkgdir}" cmake --install build-${MSYSTEM}
 
   # Rename output files by prefixing them with llama (if not already prefixed and if not DLL)
-  for i in "${pkgdir}"${MINGW_PREFIX}/bin/*.{exe,py}; do
+  for i in "${pkgdir}"${MINGW_PREFIX}/bin/*.exe; do
     filename=$(basename "$i")
     if [[ ! ("$filename" =~ ^llama) ]]; then
       mv "${i}" "${pkgdir}${MINGW_PREFIX}/bin/llama-${filename}"

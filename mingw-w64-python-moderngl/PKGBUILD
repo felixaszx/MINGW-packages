@@ -5,7 +5,7 @@ _realname=moderngl
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=5.12.0
-pkgrel=1
+pkgrel=3
 pkgdesc='ModernGL: High performance rendering for Python 3 (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -13,6 +13,7 @@ msys2_references=(
   'purl: pkg:pypi/moderngl'
 )
 url="https://github.com/moderngl/moderngl"
+msys2_repository_url='https://github.com/moderngl/moderngl'
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-python"
@@ -29,7 +30,7 @@ sha256sums=('52936a98ccb2f2e1d6e3cb18528b2919f6831e7e3f924e788b5873badce5129b')
 
 prepare() {
   cd "$srcdir"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_pyname//_/-}-$pkgver" "python-build-${MSYSTEM}"
 }
 

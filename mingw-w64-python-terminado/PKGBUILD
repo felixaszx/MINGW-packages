@@ -4,11 +4,12 @@ _realname=terminado
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=0.18.1
-pkgrel=2
+pkgrel=4
 pkgdesc="Terminals served to term.js using Tornado websockets (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/jupyter/terminado'
+msys2_repository_url='https://github.com/jupyter/terminado'
 msys2_documentation_url='https://terminado.readthedocs.io/'
 msys2_references=(
   'archlinux: python-terminado'

@@ -1,4 +1,5 @@
-# Maintainer: Christoph Reiter <reiter.christoph@gmail.com>
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
+# Contributor: Christoph Reiter <reiter.christoph@gmail.com>
 
 _realname=rav1e
 pkgbase=mingw-w64-${_realname}
@@ -13,6 +14,7 @@ msys2_references=(
   'purl: pkg:cargo/rav1e'
 )
 url=https://github.com/xiph/rav1e/
+msys2_repository_url='https://github.com/xiph/rav1e'
 license=('spdx:BSD-2-Clause')
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust"
              "${MINGW_PACKAGE_PREFIX}-cargo-c"
@@ -25,7 +27,7 @@ sha256sums=('06d1523955fb6ed9cf9992eace772121067cca7e8926988a1ee16492febbe01e')
 prepare() {
   cd "${_realname}-${pkgver}"
 
-  cargo fetch --locked
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {

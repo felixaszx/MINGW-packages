@@ -7,7 +7,7 @@ _realname=quassel
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 pkgver=0.14.0
-pkgrel=3
+pkgrel=5
 pkgdesc="Next-generation distributed IRC client (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -16,6 +16,7 @@ msys2_references=(
   "cpe: cpe:/a:quassel-irc:quassel"
 )
 url="https://quassel-irc.org/"
+msys2_repository_url='http://github.com/quassel/quassel'
 license=('GPL')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-cc"

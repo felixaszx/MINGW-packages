@@ -5,7 +5,7 @@ _realname=lsp-black
 pkgbase=mingw-w64-python-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-python-${_realname}
 pkgver=2.0.0
-pkgrel=2
+pkgrel=4
 pkgdesc='Black plugin for the Python LSP Server (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -14,6 +14,7 @@ msys2_references=(
 )
 license=('spdx:MIT')
 url='https://github.com/python-lsp/python-lsp-black'
+msys2_repository_url='https://github.com/python-lsp/python-lsp-black'
 depends=(
     "${MINGW_PACKAGE_PREFIX}-python"
     "${MINGW_PACKAGE_PREFIX}-python-black"
@@ -27,7 +28,7 @@ sha256sums=('8286d2d310c566844b3c116b824ada6fccfa6ba228b1a09a0526b74c04e0805f')
 
 prepare() {
   cd "${srcdir}"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_pyname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

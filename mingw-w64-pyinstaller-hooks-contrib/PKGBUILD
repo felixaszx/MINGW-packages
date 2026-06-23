@@ -3,12 +3,13 @@
 _realname=pyinstaller-hooks-contrib
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=2025.5
+pkgver=2026.6
 pkgrel=1
 pkgdesc='Community maintained hooks for PyInstaller (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/pyinstaller/pyinstaller-hooks-contrib'
+msys2_repository_url='https://github.com/pyinstaller/pyinstaller-hooks-contrib'
 msys2_references=(
   'purl: pkg:pypi/pyinstaller-hooks-contrib'
 )
@@ -20,7 +21,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname//-/_}-${pkgver}.tar.gz")
-sha256sums=('707386770b8fe066c04aad18a71bc483c7b25e18b4750a756999f7da2ab31982')
+sha256sums=('bef5002c32f4f50bd55b005da12cff64eca8783e7eaf86a06a62410164bab725')
 
 build() {
   cp -r "${_realname//-/_}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

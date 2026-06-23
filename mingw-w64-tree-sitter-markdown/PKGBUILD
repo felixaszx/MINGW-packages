@@ -1,9 +1,10 @@
+# Maintainer: Maksim Bondarenkov <maksapple2306@gmail.com>
 
 _realname=tree-sitter-markdown
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.5.0
-pkgrel=1
+pkgver=0.5.3
+pkgrel=2
 pkgdesc='Markdown grammar for tree-sitter (mingw-w64)'
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
@@ -19,15 +20,13 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-tree-sitter"
   "${MINGW_PACKAGE_PREFIX}-nodejs"
 )
-source=("https://github.com/tree-sitter-grammars/${_realname}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('14c2c948ccf0e9b606eec39b09286c59dddf28307849f71b7ce2b1d1ef06937e')
+source=("${_realname}-${pkgver}.tar.gz::${msys2_repository_url}/releases/download/v${pkgver}/${_realname}.tar.gz")
+sha256sums=('22e40c51810e64c6bf073f0147f3abc167473206789e6dcbed4ba198ff3ca119')
+noextract=("${_realname}-${pkgver}.tar.gz")
 
 prepare() {
-  cd "${_realname}-${pkgver}/tree-sitter-markdown"
-  tree-sitter generate src/grammar.json
-
-  cd "../tree-sitter-markdown-inline"
-  tree-sitter generate src/grammar.json
+  mkdir -p "${_realname}-${pkgver}"
+  tar -xf "${_realname}-${pkgver}.tar.gz" -C "${_realname}-${pkgver}" || true
 }
 
 build() {
@@ -36,8 +35,6 @@ build() {
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -Wno-dev \
       -DCMAKE_BUILD_TYPE=None \
-      -DCMAKE_SHARED_LIBRARY_SUFFIX_C=.so \
-      -DCMAKE_INSTALL_BINDIR=lib \
       -S "${_realname}-${pkgver}" \
       -B "build-${MSYSTEM}"
 
@@ -49,8 +46,8 @@ package() {
 
   # To add library to neovim runtime path
   mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser"
-  cp "${pkgdir}${MINGW_PREFIX}/lib/lib${_realname}.so" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}.so"
-  cp "${pkgdir}${MINGW_PREFIX}/lib/lib${_realname}-inline.so" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}_inline.so"
+  ln "${pkgdir}${MINGW_PREFIX}/bin/lib${_realname}.dll" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}.so"
+  ln "${pkgdir}${MINGW_PREFIX}/bin/lib${_realname}-inline.dll" "${pkgdir}${MINGW_PREFIX}/lib/nvim/parser/${_realname#tree-sitter-}_inline.so"
 
   install -Dm644 "${_realname}-${pkgver}"/LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }

@@ -1,14 +1,15 @@
---- a/intern/ghost/CMakeLists.txt
-+++ b/intern/ghost/CMakeLists.txt
-@@ -479,7 +479,6 @@
-     intern/GHOST_DisplayManagerWin32.cc
+diff -Naur blender-5.1.1/intern/ghost/CMakeLists.txt blender-5.1.1-patched/intern/ghost/CMakeLists.txt
+--- blender-5.1.1/intern/ghost/CMakeLists.txt	2026-04-27 12:00:45.102583000 +0300
++++ blender-5.1.1-patched/intern/ghost/CMakeLists.txt	2026-04-27 12:01:09.811107500 +0300
+@@ -429,7 +429,6 @@
+     intern/GHOST_ContextD3D.cc
      intern/GHOST_DropTargetWin32.cc
      intern/GHOST_SystemWin32.cc
 -    intern/GHOST_TrackpadWin32.cc
      intern/GHOST_WindowWin32.cc
      intern/GHOST_Wintab.cc
  
-@@ -488,10 +489,15 @@
+@@ -437,10 +436,15 @@
      intern/GHOST_DropTargetWin32.hh
      intern/GHOST_SystemWin32.hh
      intern/GHOST_TaskbarWin32.hh
@@ -25,9 +26,10 @@
    list(APPEND LIB comctl32 shcore dwmapi)
  
    list(APPEND SRC
---- a/intern/ghost/intern/GHOST_SystemWin32.cc
-+++ b/intern/ghost/intern/GHOST_SystemWin32.cc
-@@ -450,9 +450,9 @@
+diff -Naur blender-5.1.1/intern/ghost/intern/GHOST_SystemWin32.cc blender-5.1.1-patched/intern/ghost/intern/GHOST_SystemWin32.cc
+--- blender-5.1.1/intern/ghost/intern/GHOST_SystemWin32.cc	2026-04-27 12:00:45.073823100 +0300
++++ blender-5.1.1-patched/intern/ghost/intern/GHOST_SystemWin32.cc	2026-04-27 12:01:09.816095500 +0300
+@@ -434,9 +434,9 @@
      if (timerMgr->fireTimers(getMilliSeconds())) {
        hasEventHandled = true;
      }
@@ -39,7 +41,7 @@
      /* Process all the events waiting for us. */
      while (::PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {
        /* #TranslateMessage doesn't alter the message, and doesn't change our raw keyboard data.
-@@ -461,9 +461,9 @@
+@@ -445,9 +445,9 @@
        ::DispatchMessageW(&msg);
        hasEventHandled = true;
      }
@@ -51,7 +53,7 @@
      /* `PeekMessage` above is allowed to dispatch messages to the `wndproc` without us
       * noticing, so we need to check the event manager here to see if there are
       * events waiting in the queue. */
-@@ -1522,7 +1522,7 @@
+@@ -1582,7 +1582,7 @@
    return eventSent;
  }
  #endif /* WITH_INPUT_NDOF */
@@ -60,16 +62,16 @@
  void GHOST_SystemWin32::driveTrackpad()
  {
    GHOST_WindowWin32 *active_window = static_cast<GHOST_WindowWin32 *>(
-@@ -1568,7 +4568,7 @@
-                                               false));
+@@ -1629,7 +1629,7 @@
+                                                             false));
    }
  }
 -
 +#endif
  LRESULT WINAPI GHOST_SystemWin32::s_wndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
  {
-   GHOST_Event *event = nullptr;
-@@ -2193,8 +2193,9 @@
+   std::unique_ptr<GHOST_Event> event = nullptr;
+@@ -2265,8 +2265,9 @@
                         suggestedWindowRect->right - suggestedWindowRect->left,
                         suggestedWindowRect->bottom - suggestedWindowRect->top,
                         SWP_NOZORDER | SWP_NOACTIVATE);
@@ -80,7 +82,7 @@
            break;
          }
          case WM_DISPLAYCHANGE: {
-@@ -2292,6 +2292,7 @@
+@@ -2378,6 +2379,7 @@
             * In GHOST, we let DefWindowProc call the timer callback. */
            break;
          }
@@ -88,7 +90,7 @@
          case DM_POINTERHITTEST: {
            /* The DM_POINTERHITTEST message is sent to a window, when pointer input is first
             * detected, in order to determine the most probable input target for Direct
-@@ -2302,6 +2302,7 @@
+@@ -2387,6 +2389,7 @@
            }
            break;
          }
@@ -96,9 +98,10 @@
        }
      }
      else {
---- a/intern/ghost/intern/GHOST_SystemWin32.hh
-+++ b/intern/ghost/intern/GHOST_SystemWin32.hh
-@@ -437,7 +437,7 @@
+diff -Naur blender-5.1.1/intern/ghost/intern/GHOST_SystemWin32.hh blender-5.1.1-patched/intern/ghost/intern/GHOST_SystemWin32.hh
+--- blender-5.1.1/intern/ghost/intern/GHOST_SystemWin32.hh	2026-04-27 12:00:45.047126200 +0300
++++ blender-5.1.1-patched/intern/ghost/intern/GHOST_SystemWin32.hh	2026-04-27 12:01:09.820084300 +0300
+@@ -449,7 +449,7 @@
     */
    bool processNDOF(RAWINPUT const &raw);
  #endif
@@ -107,7 +110,7 @@
    /**
     * Drives Direct Manipulation update.
     */
-@@ -447,7 +447,7 @@
+@@ -459,7 +459,7 @@
     * Creates trackpad events for the active window.
     */
    void processTrackpad();
@@ -116,8 +119,9 @@
    /**
     * Check current key layout for AltGr
     */
---- a/intern/ghost/intern/GHOST_TrackpadWin32.cc
-+++ b/intern/ghost/intern/GHOST_TrackpadWin32.cc
+diff -Naur blender-5.1.1/intern/ghost/intern/GHOST_TrackpadWin32.cc blender-5.1.1-patched/intern/ghost/intern/GHOST_TrackpadWin32.cc
+--- blender-5.1.1/intern/ghost/intern/GHOST_TrackpadWin32.cc	2026-04-27 12:00:45.092180900 +0300
++++ blender-5.1.1-patched/intern/ghost/intern/GHOST_TrackpadWin32.cc	2026-04-27 12:01:09.825070300 +0300
 @@ -9,7 +9,9 @@
  #include <cmath>
  
@@ -128,66 +132,75 @@
  
  GHOST_DirectManipulationHelper::GHOST_DirectManipulationHelper(
      HWND hWnd,
---- a/intern/ghost/intern/GHOST_WindowWin32.cc
-+++ b/intern/ghost/intern/GHOST_WindowWin32.cc
-@@ -83,7 +83,9 @@
-       m_normal_state(GHOST_kWindowStateNormal),
-       m_user32(::LoadLibrary("user32.dll")),
-       m_parentWindowHwnd(parentwindow ? parentwindow->m_hWnd : HWND_DESKTOP),
+diff -Naur blender-5.1.1/intern/ghost/intern/GHOST_WindowWin32.cc blender-5.1.1-patched/intern/ghost/intern/GHOST_WindowWin32.cc
+--- blender-5.1.1/intern/ghost/intern/GHOST_WindowWin32.cc	2026-04-27 12:00:45.021040200 +0300
++++ blender-5.1.1-patched/intern/ghost/intern/GHOST_WindowWin32.cc	2026-04-27 12:01:09.828555400 +0300
+@@ -81,8 +81,10 @@
+       last_pointer_tablet_data_(GHOST_TABLET_DATA_NONE),
+       normal_state_(GHOST_kWindowStateNormal),
+       user32_(::LoadLibrary("user32.dll")),
+-      parent_window_hwnd_(parent_window ? parent_window->h_wnd_ : HWND_DESKTOP),
++      parent_window_hwnd_(parent_window ? parent_window->h_wnd_ : HWND_DESKTOP)
 +#ifdef _MSC_VER
-       m_directManipulationHelper(nullptr),
+       direct_manipulation_helper_(nullptr)
 +#endif
-       m_debug_context(is_debug)
  {
-   DWORD style = parentwindow ?
-@@ -235,7 +237,7 @@
-   /* Allow the showing of a progress bar on the taskbar. */
+   DWORD style = parent_window ?
+                     WS_POPUPWINDOW | WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX :
+@@ -216,13 +218,16 @@
    CoCreateInstance(
-       CLSID_TaskbarList, nullptr, CLSCTX_INPROC_SERVER, IID_ITaskbarList3, (LPVOID *)&m_Bar);
--
+       CLSID_TaskbarList, nullptr, CLSCTX_INPROC_SERVER, IID_ITaskbarList3, (LPVOID *)&bar_);
+ 
 +#ifdef _MSC_VER
    /* Initialize Direct Manipulation. */
-   m_directManipulationHelper = GHOST_DirectManipulationHelper::create(m_hWnd, getDPIHint());
- }
-@@ -271,6 +273,7 @@
-   }
- 
-   return m_directManipulationHelper->getTrackpadInfo();
+   direct_manipulation_helper_ = GHOST_DirectManipulationHelper::create(h_wnd_, getDPIHint());
 +#endif
+ 
+   /* Initialize HDR info. */
+   updateHDRInfo();
  }
+ 
++#ifdef _MSC_VER
+ void GHOST_WindowWin32::updateDirectManipulation()
+ {
+   if (!direct_manipulation_helper_) {
+@@ -255,6 +260,7 @@
+ 
+   return direct_manipulation_helper_->getTrackpadInfo();
+ }
++#endif
  
  GHOST_WindowWin32::~GHOST_WindowWin32()
-@@ -324,9 +327,10 @@
-     ::DestroyWindow(m_hWnd);
-     m_hWnd = 0;
+ {
+@@ -308,8 +314,10 @@
+     h_wnd_ = 0;
    }
--
+ 
 +#ifdef _MSC_VER
-   delete m_directManipulationHelper;
-   m_directManipulationHelper = nullptr;
+   delete direct_manipulation_helper_;
+   direct_manipulation_helper_ = nullptr;
 +#endif
  }
  
  void GHOST_WindowWin32::adjustWindowRectForClosestMonitor(LPRECT win_rect,
-@@ -1125,14 +1130,14 @@
-     DwmSetWindowAttribute(this->m_hWnd, 20, &DarkMode, sizeof(DarkMode));
+@@ -1028,12 +1036,14 @@
    }
  }
--
+ 
 +#ifdef _MSC_VER
  void GHOST_WindowWin32::updateDPI()
  {
-   if (m_directManipulationHelper) {
-     m_directManipulationHelper->setDPI(getDPIHint());
+   if (direct_manipulation_helper_) {
+     direct_manipulation_helper_->setDPI(getDPIHint());
    }
  }
--
 +#endif
+ 
  uint16_t GHOST_WindowWin32::getDPIHint()
  {
-   if (m_user32) {
---- a/intern/ghost/intern/GHOST_WindowWin32.hh
-+++ b/intern/ghost/intern/GHOST_WindowWin32.hh
+diff -Naur blender-5.1.1/intern/ghost/intern/GHOST_WindowWin32.hh blender-5.1.1-patched/intern/ghost/intern/GHOST_WindowWin32.hh
+--- blender-5.1.1/intern/ghost/intern/GHOST_WindowWin32.hh	2026-04-27 12:00:45.093178200 +0300
++++ blender-5.1.1-patched/intern/ghost/intern/GHOST_WindowWin32.hh	2026-04-27 12:01:09.832450200 +0300
 @@ -14,7 +14,9 @@
  #endif /* WIN32 */
  
@@ -198,45 +211,39 @@
  #include "GHOST_Window.hh"
  #include "GHOST_Wintab.hh"
  #ifdef WITH_INPUT_IME
-@@ -300,9 +302,9 @@
-   {
-     return GHOST_kFailure;
-   }
--
+@@ -289,7 +291,9 @@
+    */
+   GHOST_TabletData getTabletData();
+ 
 +#ifdef _MSC_VER
    void updateDPI();
--
 +#endif
+ 
    uint16_t getDPIHint() override;
  
-   /** True if the mouse is either over or captured by the window. */
-@@ -324,7 +326,7 @@
- 
+@@ -313,6 +317,7 @@
    void endIME();
  #endif /* WITH_INPUT_IME */
--
+ 
 +#ifdef _MSC_VER
    /*
     * Drive DirectManipulation context.
     */
-@@ -337,7 +339,7 @@
+@@ -325,6 +330,7 @@
    void onPointerHitTest(WPARAM wParam);
  
    GHOST_TTrackpadInfo getTrackpadInfo();
--
 +#endif
-  private:
-   /**
-    * \param type: The type of rendering context create.
-@@ -425,9 +427,9 @@
-   HMODULE m_user32;
  
-   HWND m_parentWindowHwnd;
--
+   /* Update HDR info on initialization and window changes. */
+   void updateHDRInfo();
+@@ -413,7 +419,9 @@
+ 
+   HWND parent_window_hwnd_;
+ 
 +#ifdef _MSC_VER
-   GHOST_DirectManipulationHelper *m_directManipulationHelper;
--
+   GHOST_DirectManipulationHelper *direct_manipulation_helper_;
 +#endif
+ 
  #ifdef WITH_INPUT_IME
    /** Handle input method editors event */
-   GHOST_ImeWin32 m_imeInput;

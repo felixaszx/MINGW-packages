@@ -4,12 +4,13 @@ _realname=patch-ng
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=1.18.1
-pkgrel=1
+pkgrel=3
 pkgdesc="Python library to parse and apply unified diffs (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 license=('spdx:MIT')
 url="https://github.com/conan-io/python-patch-ng"
+msys2_repository_url='https://github.com/conan-io/python-patch-ng'
 msys2_references=(
   'purl: pkg:pypi/patch-ng'
 )

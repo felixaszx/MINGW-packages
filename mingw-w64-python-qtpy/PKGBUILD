@@ -5,11 +5,12 @@ _realname=qtpy
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=2.4.3
-pkgrel=1
+pkgrel=3
 pkgdesc='Provides an abstraction layer on top of the various Qt bindings (PyQt5/6 and PySide2/6). (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/spyder-ide/qtpy/"
+msys2_repository_url='https://github.com/spyder-ide/qtpy'
 msys2_references=(
   'purl: pkg:pypi/qtpy'
 )
@@ -34,7 +35,7 @@ prepare() {
   patch -p1 -i "$srcdir"/001-restore-qtwebkit-support.patch
 
   cd "$srcdir"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_pyname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

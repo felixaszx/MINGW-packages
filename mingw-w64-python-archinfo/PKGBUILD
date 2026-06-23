@@ -3,13 +3,17 @@
 _realname=archinfo
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=9.2.164
+pkgver=9.2.221
 pkgrel=1
 pkgdesc="Classes with architecture-specific information useful to other projects (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/angr/archinfo"
+msys2_repository_url='https://github.com/angr/archinfo'
 msys2_references=(
+  'anitya: 34908'
+  'archlinux: python-archinfo'
+  'aur: python-archinfo-git'
   'purl: pkg:pypi/archinfo'
 )
 license=('spdx:BSD-2-Clause')
@@ -27,8 +31,7 @@ optdepends=(
   "${MINGW_PACKAGE_PREFIX}-python-pyvex"
 )
 source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha512sums=('c9ff2f2c1bce4d909246715e11f9632aa1cda72dedebc948b8d6db7a80161b621fc7f70054d3d7dbe97c8999fedaa097da961d468f95b9915f78ecca9f4e886e')
-
+sha512sums=('d1cf2bd91bc3c7d618764ce1b511a6cdb84f0090a3901583e6c97d61845d4f83d5af88869ccceb3db746b1c6da058c31d48c80716fc19998986185aae435058a')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

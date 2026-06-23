@@ -3,21 +3,25 @@
 _realname=tea
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.10.1
+pkgver=0.14.1
 pkgrel=1
 pkgdesc='A command line tool to interact with Gitea servers (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://gitea.com/gitea/tea'
 msys2_references=(
+  'anitya: 377482'
   'archlinux: tea'
+  'aur: gitea-tea-git'
+  'gentoo: dev-util/tea'
+  'purl: pkg:golang/code.gitea.io/tea'
 )
 license=('spdx:MIT')
 makedepends=("${MINGW_PACKAGE_PREFIX}-go" "${MINGW_PACKAGE_PREFIX}-cc" "git")
-optdepends=("git: To interact with repositories")
+optdepends=("${MINGW_PACKAGE_PREFIX}-git: To interact with repositories")
 options=('!strip')
 source=("$_realname-$pkgver.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('791b7f90eff9ade0d5ee5e3f0dfba128e35eaf83b5f8b8d5f5d6cc9a94ae9b03')
+sha256sums=('848b6b2fafa270fa77b4e278d521bfcc16d2f721c45ac90f08f5b16dc630c3f9')
 
 build() {
   [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
@@ -41,7 +45,7 @@ build() {
     -trimpath \
     -mod=readonly \
     -modcacherw \
-    -ldflags "-linkmode=external -compressdwarf=false -X main.Version=${pkgver}" \
+    -ldflags "-linkmode=external -compressdwarf=false -X code.gitea.io/tea/modules/version.Version=${pkgver} -X code.gitea.io/tea/modules/version.Tags=mingw -X code.gitea.io/tea/modules/version.SDK=0.23.2" \
     -o build \
     .
 }

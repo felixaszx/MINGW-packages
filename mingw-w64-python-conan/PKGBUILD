@@ -3,12 +3,13 @@
 _realname=conan
 pkgbase=mingw-w64-python-conan
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2.18.1
+pkgver=2.29.1
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
+  'anitya: 34518'
   'aur: conan'
   'purl: pkg:pypi/conan'
 )
@@ -33,24 +34,19 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=('!strip')
-source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz"
-        "0001-urllib3-req.patch")
-sha256sums=('5d8e9fac7614de9297933f65de8f17db14851a871cebc962f4856b7c294f43c5'
-            '731de256a4612cdfea37398e96af5811574ff8d11485200dc643b6352cd46395')
+source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
+sha256sums=('3a3bc1bfda462237c537d0dd8baa9dd68f6ac29c3ecc98dbb4a668ccc943ff33')
 
 build() {
-  cd "${srcdir}/${_realname}-${pkgver}"
+  cd "${_realname}-${pkgver}"
 
-  # https://github.com/conan-io/conan/issues/13948
-  patch -Np1 -i "${srcdir}/0001-urllib3-req.patch"
-
-  ${MINGW_PREFIX}/bin/python -m build --wheel --skip-dependency-check --no-isolation
+  python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 package() {
-  cd "${srcdir}/${_realname}-${pkgver}"
+  cd "${_realname}-${pkgver}"
   MSYS2_ARG_CONV_EXCL="--prefix=" \
-    ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
+    python -m installer --prefix=${MINGW_PREFIX} \
     --destdir="${pkgdir}" dist/*.whl
 
   install -Dm644 LICENSE.md "${pkgdir}${MINGW_PREFIX}/share/licenses/python-${_realname}/COPYING"

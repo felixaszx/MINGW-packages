@@ -3,12 +3,13 @@
 _realname=wasm-component-ld
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.5.15
+pkgver=0.5.25
 pkgrel=1
 pkgdesc="Command line linker for creating WebAssembly components (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/bytecodealliance/wasm-component-ld"
+msys2_repository_url='https://github.com/bytecodealliance/wasm-component-ld'
 msys2_references=(
   'archlinux: wasm-component-ld'
   'purl: pkg:cargo/wasm-component-ld'
@@ -18,12 +19,12 @@ depends=("${MINGW_PACKAGE_PREFIX}-lld")
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-rust-wasm")
 source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('d625ce7efba6b88fd0691d313681b660bb1c456945d812355936c7cd489912b1')
+sha256sums=('852f2b7a91c92b3f7442e2b839fce21ca235798e4e9fe4cfffa70c2f7dc5c511')
 
 prepare() {
   cd "${_realname}-${pkgver}"
 
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {

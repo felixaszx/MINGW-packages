@@ -3,13 +3,16 @@
 _realname=pydantic
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2.11.5
+pkgver=2.12.5
 pkgrel=1
 pkgdesc="Data validation and settings management using python type hints (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/pydantic/pydantic'
+msys2_repository_url='https://github.com/pydantic/pydantic'
 msys2_references=(
+  'archlinux: python-pydantic'
+  'gentoo: dev-python/pydantic'
   'purl: pkg:pypi/pydantic'
   "cpe: cpe:/a:pydantic_project:pydantic"
 )
@@ -24,8 +27,11 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-hatchling"
              "${MINGW_PACKAGE_PREFIX}-python-hatch-fancy-pypi-readme")
+checkdepends=("${MINGW_PACKAGE_PREFIX}-python-jsonschema"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest"
+              "${MINGW_PACKAGE_PREFIX}-python-pytest-benchmark")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('7f853db3d0ce78ce8bbb148c401c2cdd6431b3473c0cdff2755c7690952a7b7a')
+sha256sums=('4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

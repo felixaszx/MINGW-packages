@@ -4,7 +4,7 @@ _realname=qt6-webview
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc='Provides a way to display web content in a QML application (mingw-w64)'
@@ -20,11 +20,12 @@ license=('spdx:LGPL-3.0-only WITH Qt-GPL-exception-1.0 AND BSD-3-Clause AND GFDL
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-qt6-base"
              "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
              "rsync")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz")
-sha256sums=('c29ad4fbb8f7a2042c4941bef88bb13bd04757eed94d6937ae69e0e4ea0d59a5')
+sha256sums=('8d62c8ef70d58260e9b3e8b5fc1a8bc48495308a4437003a394483757427133d')
 
 build() {
   mkdir -p build-${MSYSTEM} && cd build-${MSYSTEM}

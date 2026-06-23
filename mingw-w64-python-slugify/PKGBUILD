@@ -5,7 +5,7 @@ _realname=slugify
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=8.0.4
-pkgrel=3
+pkgrel=5
 pkgdesc='A Python Slugify application that handles Unicode (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -13,6 +13,7 @@ msys2_references=(
   'purl: pkg:pypi/python-slugify'
 )
 url="https://github.com/un33k/python-slugify"
+msys2_repository_url='https://github.com/un33k/python-slugify'
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-python"
@@ -29,7 +30,7 @@ sha256sums=('59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856')
 
 prepare() {
   cd "$srcdir"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_pyname//_/-}-$pkgver" "python-build-${MSYSTEM}"
 }
 

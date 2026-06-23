@@ -3,7 +3,7 @@
 _realname=pyjwt
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=2.10.1
+pkgver=2.13.0
 pkgrel=1
 pkgdesc='JSON Web Token implementation in Python (mingw-w64)'
 arch=('any')
@@ -13,6 +13,7 @@ msys2_references=(
   "cpe: cpe:/a:pyjwt_project:pyjwt"
 )
 url='https://github.com/jpadilla/pyjwt'
+msys2_repository_url='https://github.com/jpadilla/pyjwt'
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python-setuptools")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
@@ -20,7 +21,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953')
+sha256sums=('41571c89ca91598c79e8ef18a2d07367d4810fbbd6f637794879baf1b7703423')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

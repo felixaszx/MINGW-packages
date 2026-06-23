@@ -1,23 +1,36 @@
 # Maintainer: Raphael Amorim <rapha850@gmail.com>
+
 _realname=rio
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.2.20
+pkgver=0.4.6
 pkgrel=1
 pkgdesc="A hardware-accelerated GPU terminal emulator focusing to run in desktops and browsers (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/raphamorim/rio"
+msys2_repository_url='https://github.com/raphamorim/rio'
+msys2_changelog_url='https://rioterm.com/changelog'
+msys2_references=(
+  'archlinux: rio'
+  'aur: rio-git'
+  'purl: pkg:cargo/rioterm'
+  'purl: pkg:cargo/corcovado'
+  'purl: pkg:cargo/rio-backend'
+  'purl: pkg:cargo/rio-proc-macros'
+  'purl: pkg:cargo/rio-window'
+  'purl: pkg:cargo/sugarloaf'
+)
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 source=("https://github.com/raphamorim/${_realname}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('10c70fe13c4261593359fcf9ec489770cb056d07153d790193bfa8621ac4ca42')
+sha256sums=('5f74e4866a109a0823fab25e528ba5eba008c7ece9dba08a87bfee6aa5946fdb')
 
 prepare() {
   cd "${_realname}-${pkgver}"
 
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "${RUST_CHOST}"
 }
 
 build() {

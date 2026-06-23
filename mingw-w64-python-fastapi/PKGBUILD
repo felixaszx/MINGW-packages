@@ -3,18 +3,21 @@
 _realname=fastapi
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.116.0
+pkgver=0.138.0
 pkgrel=1
 pkgdesc='FastAPI framework, high performance, easy to learn, fast to code, ready for production (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
-url='https://github.com/tiangolo/fastapi'
+url='https://github.com/fastapi/fastapi'
+msys2_repository_url='https://github.com/fastapi/fastapi'
+msys2_changelog_url='https://fastapi.tiangolo.com/release-notes/'
 msys2_references=(
   'purl: pkg:pypi/fastapi'
   "cpe: cpe:2.3:a:fastapi_project:fastapi"
 )
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python"
+         "${MINGW_PACKAGE_PREFIX}-python-annotated-doc"
          "${MINGW_PACKAGE_PREFIX}-python-anyio" # implicitly required for concurrency
          "${MINGW_PACKAGE_PREFIX}-python-pydantic"
          "${MINGW_PACKAGE_PREFIX}-python-starlette")
@@ -30,20 +33,17 @@ optdepends=("${MINGW_PACKAGE_PREFIX}-python-email-validator: for email validatio
             "${MINGW_PACKAGE_PREFIX}-uvicorn: for Uvicorn as ASGI server")
 options=('!strip')
 source=("${url}/archive/${pkgver}/${_realname}-$pkgver.tar.gz")
-sha256sums=('453dcb5dd67053f1b75c805cdc25790ea75593eb3e460d3ef5044133c02d90c5')
-
-prepare() {
-  cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
-}
+sha256sums=('8a0ec7e5e260da7f21b92e0de909ea04f9d632c4fa6a3d7a1cb863ee481dc1a5')
 
 build() {
-  cd "${srcdir}/python-build-${MSYSTEM}"
+  cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
+  cd "python-build-${MSYSTEM}"
 
-  ${MINGW_PREFIX}/bin/python -m build --wheel --skip-dependency-check --no-isolation
+  python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 package() {
-  cd "${srcdir}/python-build-${MSYSTEM}"
+  cd "python-build-${MSYSTEM}"
 
   MSYS2_ARG_CONV_EXCL="--prefix=" \
     "${MINGW_PREFIX}"/bin/python -m installer --prefix=${MINGW_PREFIX} \

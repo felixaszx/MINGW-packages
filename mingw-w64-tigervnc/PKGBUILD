@@ -3,7 +3,7 @@
 _realname=tigervnc
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=1.15.0
+pkgver=1.16.2
 pkgrel=1
 pkgdesc="High performance, multi-platform VNC client and server (mingw-w64)"
 arch=('any')
@@ -12,6 +12,9 @@ url='https://tigervnc.org'
 msys2_repository_url="https://github.com/TigerVNC/tigervnc"
 msys2_references=(
   'archlinux: tigervnc'
+  'cpe: cpe:2.3:a:tigervnc:tigervnc'
+  'cygwin: tigervnc'
+  'gentoo: net-misc/tigervnc'
 )
 license=('spdx:GPL-2.0-or-later')
 depends=("${MINGW_PACKAGE_PREFIX}-fltk1.3"
@@ -28,18 +31,8 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-libiconv"
              "${MINGW_PACKAGE_PREFIX}-gettext-tools")
-source=("https://github.com/TigerVNC/tigervnc/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz"
-        "0001-fix-build-with-mingw-clang.patch"
-        "0002-fix-fullscreen-api-conflicts.patch")
-sha256sums=('7f231906801e89f09a212e86701f3df1722e36767d6055a4e619390570548537'
-            'c5fd1d26bfb7461e3f61fe233ac648fc4f7421319a604f5bf59d3c9900184579'
-            'fc112c1449ead798733c55c06b940b078f1cec5c2068872c5a5046fbde22e633')
-
-prepare() {
-  cd ${_realname}-${pkgver}
-  patch -p1 -i "${srcdir}"/0001-fix-build-with-mingw-clang.patch
-  patch -p1 -i "${srcdir}"/0002-fix-fullscreen-api-conflicts.patch
-}
+source=("https://github.com/TigerVNC/tigervnc/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
+sha256sums=('b107c0c8b8a962594281690366c24186e95c2ea4a169acbc0076aa62ed01f467')
 
 build() {
   declare -a extra_config

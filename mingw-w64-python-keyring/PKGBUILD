@@ -4,12 +4,13 @@ _realname=keyring
 pkgbase=mingw-w64-python-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-python-${_realname}
 pkgver=25.6.0
-pkgrel=1
+pkgrel=3
 pkgdesc='Provides an easy way to access the system keyring service (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 license=('spdx:MIT')
 url='https://github.com/jaraco/keyring'
+msys2_repository_url='https://github.com/jaraco/keyring'
 msys2_references=(
   'purl: pkg:pypi/keyring'
   "cpe: cpe:/a:python:keyring"

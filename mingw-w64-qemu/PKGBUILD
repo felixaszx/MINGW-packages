@@ -6,16 +6,16 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-qemu-guest-agent"
   "${MINGW_PACKAGE_PREFIX}-qemu-image-util"
 )
-_base_ver="10.0.2"
+_base_ver="11.0.1"
 # QEMU Versioning of RC-SourcePackage and RC-Version differs
 # e.g. qemu-6.1.0-rc0.tar.xz contains 6.0.90, qemu-6.1.0-rc1.tar.xz contains 6.0.91
 # Unset _rc_no to create Release-Build
 #_rc_no="4"
-_rc_base_ver="9.2.9${_rc_no}"
+_rc_base_ver="10.2.9${_rc_no}"
 _rc_file_ver="rc${_rc_no}"
 _tarname=$( [ -z "${_rc_no}" ] && echo ${_realname}-${_base_ver} || echo ${_realname}-${_base_ver}-${_rc_file_ver} )
 pkgver=$( [ -z "${_rc_no}" ] && echo ${_base_ver} || echo ${_rc_base_ver} )
-pkgrel=3
+pkgrel=1
 pkgdesc="QEMU - a generic and open source machine emulator and virtualizer (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -32,9 +32,12 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-autotools"
   "${MINGW_PACKAGE_PREFIX}-ninja"
   "${MINGW_PACKAGE_PREFIX}-python"
+  "${MINGW_PACKAGE_PREFIX}-python-pip"
+  "${MINGW_PACKAGE_PREFIX}-python-setuptools"
   "${MINGW_PACKAGE_PREFIX}-python-sphinx"
   "${MINGW_PACKAGE_PREFIX}-python-sphinx_rtd_theme"
-  "${MINGW_PACKAGE_PREFIX}-tools-git")
+  "${MINGW_PACKAGE_PREFIX}-python-wheel"
+  "${MINGW_PACKAGE_PREFIX}-tools")
 case ${MSYSTEM} in
   CLANG*)
     # work around lack of windmc in llvm
@@ -60,8 +63,10 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-graphite2"
   "${MINGW_PACKAGE_PREFIX}-gst-plugins-base"
   "${MINGW_PACKAGE_PREFIX}-gstreamer"
+  "${MINGW_PACKAGE_PREFIX}-gtk-vnc"
   "${MINGW_PACKAGE_PREFIX}-gtk3"
   "${MINGW_PACKAGE_PREFIX}-harfbuzz"
+  "${MINGW_PACKAGE_PREFIX}-jack2"
   "${MINGW_PACKAGE_PREFIX}-jbigkit"
   "${MINGW_PACKAGE_PREFIX}-lerc"
   "${MINGW_PACKAGE_PREFIX}-libc++"
@@ -100,7 +105,7 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-snappy"
   "${MINGW_PACKAGE_PREFIX}-spice"
   "${MINGW_PACKAGE_PREFIX}-usbredir"
-  $([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-virglrenderer")
+  "${MINGW_PACKAGE_PREFIX}-virglrenderer"
   "${MINGW_PACKAGE_PREFIX}-xz"
   "${MINGW_PACKAGE_PREFIX}-zlib"
   "${MINGW_PACKAGE_PREFIX}-zstd"
@@ -114,11 +119,11 @@ source=(
   msys2.examples.tests.sh
 )
 sha256sums=(
-  'ef786f2398cb5184600f69aef4d5d691efd44576a3cff4126d38d4c6fec87759'
+  '0d235f5820278d914a3155ec27af8e4258d697ea892895570807d69c0cb8cd64'
   'SKIP'
-  '51625fd83c0a63729942d3dfc6d48be3491a700fe0f7cb8e88935b46081c9016'
+  '07370d914562bb8dab16ce3e76b5a4d32d471c792ea95b9c12afd5c29dc619bf'
   'f2f9eeb31023d002f54637a9941ea0d8fae3c6f0a66c05c033857b305bd1470d'
-  'a2db7f1d696a8609df54f48f20760ef100b04b39d2bce1ca0a7989375afab8a1'
+  '7a5b5ea4cdbe9a737f602e68722d8b92ed28140b19efac0b892e6a71698494b2'
 )
 validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584') # Michael Roth <flukshun@gmail.com>
 # tar cannot create links, to keep build running, manual extraction is required
@@ -138,7 +143,7 @@ prepare() {
   tar -xf "${srcdir}"/${_tarname}.tar.xz -C "${srcdir}" || true
 
   cd "${srcdir}"/${_tarname}
-  # apply_patch_with_msg
+  #apply_patch_with_msg whpx.$I.patch
 }
 
 build() {
@@ -154,7 +159,8 @@ build() {
     --datadir=share/qemu \
     --localedir=share/locale \
     --mandir=share/man \
-    --docdir=share/doc/qemu
+    --docdir=share/doc/qemu \
+    --disable-download
 
   # Finally build
   make
@@ -162,13 +168,6 @@ build() {
   cd qga/vss-win32
   widl -I${MINGW_PREFIX}/include -L${MINGW_PREFIX}/include \
     -t "${srcdir}"/${_tarname}/qga/vss-win32/qga-vss.idl -o qga-vss.tlb
-}
-
-check() {
-  cd "${srcdir}"/build-${MSYSTEM}
-  # Tests are not performed in CI
-  # For local testing: perform, but do not fail
-  make test || true
 }
 
 makeinstall() {
@@ -242,9 +241,8 @@ package_qemu() {
     "${MINGW_PACKAGE_PREFIX}-qemu-image-util"
   )
   optdepends=(
-    "${MINGW_PACKAGE_PREFIX}-gtk-vnc: Contains gvncviewer. For connections to Qemu VNC server"
-    "${MINGW_PACKAGE_PREFIX}-spice-gtk: Contains spicy. For connections to Qemu SPICE server"
-    "${MINGW_PACKAGE_PREFIX}-virt-viewer: Contains remote-viewer. For connections to Qemu SPICE or VNC server"
+    "${MINGW_PACKAGE_PREFIX}-spice-gtk: Contains spicy. For connections to QEMU SPICE server"
+    "${MINGW_PACKAGE_PREFIX}-virt-viewer: Contains remote-viewer. For connections to QEMU SPICE or VNC server"
   )
 
   makeinstallpkg qemu

@@ -3,18 +3,20 @@
 _realname=virtualenv
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-virtualenv")
-pkgver=20.31.2
+pkgver=20.39.1
 pkgrel=1
 pkgdesc="Virtual Python Environment builder (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
   'archlinux: python-virtualenv'
+  'gentoo: dev-python/virtualenv'
   'purl: pkg:pypi/virtualenv'
   "cpe: cpe:/a:python:virtualenv"
 )
 msys2_repository_url='https://github.com/pypa/virtualenv/'
 url="https://virtualenv.pypa.io/"
+msys2_changelog_url='https://virtualenv.pypa.io/en/latest/changelog.html'
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python-platformdirs"
          "${MINGW_PACKAGE_PREFIX}-python-distlib"
@@ -25,7 +27,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-hatch-vcs")
 options=('!strip')
 source=(https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz)
-sha256sums=('e10c0a9d02835e592521be48b332b6caee6887f332c111aa79a09b9e79efc2af')
+sha256sums=('c551ea1072d7717a273dd9a4a0adad8f45571af134b0f63a12430e85f6ac1c08')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

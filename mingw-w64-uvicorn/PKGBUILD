@@ -3,14 +3,18 @@
 _realname=uvicorn
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.35.0
+pkgver=0.49.0
 pkgrel=1
 pkgdesc='The lightning-fast ASGI server (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://www.uvicorn.org/'
 msys2_repository_url='https://github.com/encode/uvicorn'
+msys2_changelog_url='https://uvicorn.dev/release-notes/'
 msys2_references=(
+  'archlinux: uvicorn'
+  'cpe: cpe:2.3:a:encode:uvicorn'
+  'gentoo: dev-python/uvicorn'
   'purl: pkg:pypi/uvicorn'
 )
 license=('spdx:BSD-3-Clause')
@@ -22,7 +26,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-hatchling")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('bc662f087f7cf2ce11a1d7fd70b90c9f98ef2e2831556dd078d131b96cc94a01')
+sha256sums=('ebf4271aa580d9de97f93192d4595176df6e91f9aae919ca73e4fc07df1e66a3')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

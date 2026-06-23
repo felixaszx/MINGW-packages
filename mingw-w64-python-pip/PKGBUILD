@@ -4,7 +4,7 @@
 _realname=pip
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=25.1.1
+pkgver=26.1.2
 pkgrel=1
 pkgdesc="The PyPA recommended tool for installing Python packages. (mingw-w64)"
 arch=('any')
@@ -20,6 +20,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-setuptools"
          "${MINGW_PACKAGE_PREFIX}-python-distlib")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
+             "${MINGW_PACKAGE_PREFIX}-python-flit-core"
              "${MINGW_PACKAGE_PREFIX}-python-installer")
 options=('!strip')
 source=(
@@ -27,9 +28,9 @@ source=(
   "0001-use-system-distlib.patch"
   "0002-only-warn-for-externally-managed.patch"
 )
-sha256sums=('3de45d411d308d5054c2168185d8da7f9a2cd753dbac8acbfa88a8909ecd9077'
-            'c7f98690afa60e59324f1ce52e72bd7809cbfaba4e29a2d933f08c1a025f8246'
-            'be196f12feee11fe1caccbdeff9a31ac077120de7b6e85679ea54b6dd2df8f5b')
+sha256sums=('f49cd134c61cf2fd75e0ce2676db03e4054504a5a4986d00f8299ae632dc4605'
+            'e6cac9043f43cd32914a618191ac5852e4bbcc12ecf0314424d9e1a544358b69'
+            '18d3a57398bc2ee3c40e1700534a5a578cad344e9a28a4755af53ea996f6425e')
 
 prepare() {
   cd "${_realname}-${pkgver}"

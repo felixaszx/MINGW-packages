@@ -1,21 +1,21 @@
 # Maintainer: Alexey Pavlov <alexpux@gmail.com>
 # To build with Qt-Creator:
 # 1. Launch Qt-Creator with the env (set from cmd.exe):
-# set "MINGW_PREFIX=C:/msys64/mingw64"
+# set "MINGW_PREFIX=C:/msys64/ucrt64"
 # set "ACLOCAL_PATH=%MINGW_PREFIX%/share/aclocal:/usr/share/aclocal"
 # set "PKG_CONFIG_PATH=%MINGW_PREFIX%/lib/pkgconfig"
 # set "PATH=%MINGW_PREFIX%/bin;%PATH%"
 # 2. Specify the following as the CMake arguments:
-# -DMINGW_LIBS=%MINGW_PREFIX% -DCMAKE_BUILD_TYPE=Debug -DWITH_SYSTEM_GLEW=ON -DWITH_SYSTEM_OPENJPEG=ON -DWITH_INSTALL_PORTABLE=OFF -DWITH_OPENCOLLADA=ON -DWITH_GAMEENGINE=ON -DWITH_RAYOPTIMIZATION=ON -DWITH_JACK=OFF -DWITH_PLAYER=ON -DWITH_CODEC_FFMPEG=ON -DWITH_CODEC_SNDFILE=ON -DWITH_CYCLES=ON -DWITH_CYCLES_CUDA_BINARIES=OFF -DWITH_CYCLES_OSL=ON -DWITH_FFTW3=ON -DWITH_MOD_OCEANSIM=ON -DPYTHON_VERSION=3.7 -DPYTHON_LIBPATH=%MINGW_PREFIX%/lib -DPYTHON_LIBRARY="python3.6m" -DPYTHON_INCLUDE_DIRS=/msys64/mingw64/include/python3.6m -DWITH_PYTHON_INSTALL=OFF -DWITH_PYTHON_INSTALL_NUMPY=OFF -DPYTHON_NUMPY_PATH=%MINGW_PREFIX%/lib/python3.6/site-packages -DCYCLES_OSL=%MINGW_PREFIX% -DWITH_IMAGE_REDCODE=ON -DWITH_OPENMP=ON -DWITH_LLVM=ON -DLLVM_STATIC=ON
+# -DMINGW_LIBS=%MINGW_PREFIX% -DCMAKE_BUILD_TYPE=Debug -DWITH_SYSTEM_GLEW=ON -DWITH_SYSTEM_OPENJPEG=ON -DWITH_INSTALL_PORTABLE=OFF -DWITH_OPENCOLLADA=ON -DWITH_GAMEENGINE=ON -DWITH_RAYOPTIMIZATION=ON -DWITH_JACK=OFF -DWITH_PLAYER=ON -DWITH_CODEC_FFMPEG=ON -DWITH_CODEC_SNDFILE=ON -DWITH_CYCLES=ON -DWITH_CYCLES_CUDA_BINARIES=OFF -DWITH_CYCLES_OSL=ON -DWITH_FFTW3=ON -DWITH_MOD_OCEANSIM=ON -DPYTHON_VERSION=3.7 -DPYTHON_LIBPATH=%MINGW_PREFIX%/lib -DPYTHON_LIBRARY="python3.14m" -DPYTHON_INCLUDE_DIRS=/msys64/ucrt64/include/python3.14m -DWITH_PYTHON_INSTALL=OFF -DWITH_PYTHON_INSTALL_NUMPY=OFF -DPYTHON_NUMPY_PATH=%MINGW_PREFIX%/lib/python3.14/site-packages -DCYCLES_OSL=%MINGW_PREFIX% -DWITH_IMAGE_REDCODE=ON -DWITH_OPENMP=ON -DWITH_LLVM=ON -DLLVM_STATIC=ON
 
 _realname=blender
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=4.4.3
+pkgver=5.1.1
 pkgrel=3
 pkgdesc="A fully integrated 3D graphics creation suite (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url="https://www.blender.org"
 msys2_repository_url="https://projects.blender.org/blender/blender"
 msys2_references=(
@@ -25,19 +25,20 @@ msys2_references=(
 license=('spdx:GPL-2.0-or-later')
 # build conflict with "${MINGW_PACKAGE_PREFIX}-glog"
 depends=("${MINGW_PACKAGE_PREFIX}-alembic"
-         "${MINGW_PACKAGE_PREFIX}-audaspace"
+         "${MINGW_PACKAGE_PREFIX}-audaspace>=1.9.0"
          "${MINGW_PACKAGE_PREFIX}-boost-libs"
-         #"${MINGW_PACKAGE_PREFIX}-bullet-dp"
+         "${MINGW_PACKAGE_PREFIX}-ceres-solver"
          #"${MINGW_PACKAGE_PREFIX}-draco" It builds an internal library
          "${MINGW_PACKAGE_PREFIX}-embree"
          "${MINGW_PACKAGE_PREFIX}-cc-libs"
-         "${MINGW_PACKAGE_PREFIX}-gmp"
          "${MINGW_PACKAGE_PREFIX}-ffmpeg"
+         "${MINGW_PACKAGE_PREFIX}-fmt"
          "${MINGW_PACKAGE_PREFIX}-fftw"
          "${MINGW_PACKAGE_PREFIX}-freetype"
-         #"${MINGW_PACKAGE_PREFIX}-gflags"
-         #"${MINGW_PACKAGE_PREFIX}-glog"
+         "${MINGW_PACKAGE_PREFIX}-gflags>=2.3.0"
+         "${MINGW_PACKAGE_PREFIX}-glog"
          "${MINGW_PACKAGE_PREFIX}-glslang"
+         "${MINGW_PACKAGE_PREFIX}-gmp"
          "${MINGW_PACKAGE_PREFIX}-imath"
          #"${MINGW_PACKAGE_PREFIX}-jemalloc"
          "${MINGW_PACKAGE_PREFIX}-libepoxy"
@@ -50,11 +51,11 @@ depends=("${MINGW_PACKAGE_PREFIX}-alembic"
          "${MINGW_PACKAGE_PREFIX}-libwebp"
          "${MINGW_PACKAGE_PREFIX}-libwinpthread"
          "${MINGW_PACKAGE_PREFIX}-lzo2"
+         "${MINGW_PACKAGE_PREFIX}-manifold"
          #"${MINGW_PACKAGE_PREFIX}-materialx"
          #"${MINGW_PACKAGE_PREFIX}-usd"
          "${MINGW_PACKAGE_PREFIX}-omp"
          "${MINGW_PACKAGE_PREFIX}-openal"
-         "${MINGW_PACKAGE_PREFIX}-opencollada"
          "${MINGW_PACKAGE_PREFIX}-opencolorio"
          "${MINGW_PACKAGE_PREFIX}-openexr"
          "${MINGW_PACKAGE_PREFIX}-openimagedenoise"
@@ -79,12 +80,14 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-boost"
              "${MINGW_PACKAGE_PREFIX}-eigen3"
+             "${MINGW_PACKAGE_PREFIX}-fmt"
              "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
              "${MINGW_PACKAGE_PREFIX}-wintab-sdk"
              $([[ "$CARCH" == "aarch64" ]] && echo "${MINGW_PACKAGE_PREFIX}-sse2neon"))
 install=blender-${MSYSTEM}.install
 source=(https://download.blender.org/source/${_realname}-${pkgver}.tar.xz
         platform_win32_mingw64.cmake
+        comctl_v6.exe.manifest
         0001-mingw-buildsystem.patch
         0002-fix-mingw-w64-definitions.patch
         0003-disable-static_assert_align-on-mingw.patch
@@ -94,9 +97,7 @@ source=(https://download.blender.org/source/${_realname}-${pkgver}.tar.xz
         0008-mingw-use-X11-like-path-layout.patch
         0009-include-missing-headers.patch
         0010-conflict-near-far-macroses.patch
-        0011-no-TIME_UTC-on-msvcrt.patch
         0013-force-draco.patch
-        0014-fix-find-numpy-2.patch
         0015-mingw-python-like-msvc.patch
         0016-mingw-windres.patch
         0019-fix-casts.patch
@@ -106,39 +107,36 @@ source=(https://download.blender.org/source/${_realname}-${pkgver}.tar.xz
         0024-openvdb-shared.patch
         0025-callback-function-prototype-fix.patch
         0028-use-std-namespace.patch
-        0032-fix-finding-tbb.patch
         0035-Enable-SSE2NEON-on-Windows-ARM.patch
         0039-no-WRL-on-mingw-w64.patch
-        0050-fix-vulkan-import-lib-lookup.patch
-        f4ad7267342bb4eb46bc6d384f4a28d10d251978.patch)
-sha256sums=('99ecdef24ece14084016ee47c756eeb2fc8a09c8487a0296b45a117224dc5ca7'
-            'f5765c9a5fc48b67a3eafde91dd6205e9979da0e0b582f6164b320403ef4cbf9'
-            'c966881b7f4a87899e9aa9e56df434d8b8a5b138704f0605098aef28e457a853'
-            '42e40277a5d86aa48eff922c90d15d2130dc80af9f2b8aed6f7269382354cb6e'
-            'd6618a9004122b16bf6f27274cd6010d63abdf9fc1c3b5479d25ea5b50628f4b'
-            '5a07eb6d4f9a0e7031551ede64e9359e8ebf6fc53c72579307e5016db95ff164'
-            'e250fd0a992653e36b66db3f6c3708e6b6aab6513485e2813b869857307a14f2'
-            'ce6f038a670be98ec1b79ef69fd716df733218c6c8b5d12dc1f13c2bb3c3e30e'
-            '86aa99b789302506d1e0d74bf7dcac6ca9315aca816df3ca75fb1c3644ce15ea'
-            '2d1cd06ed4d795b2341c9e8828350e29adb16fca43b30a7c644a1c7ac043c16e'
-            'd4220bf1fa06b206c21b84e50febde42c2be88de68548ef208c34108ed545d8d'
-            'e018b7ee07f7b8b4964fd30feb0495101d0a6b51f218652d12ae2b6369d495eb'
-            '1d10ff80d5c16976c979ec507be01ac6d52f3ca1f5efd6ae3c5920e7ca3ebdc3'
-            '06444eeb84d61437527d402c376024a862e60766963273868d76c604185829d1'
-            '54f2569620eca6a6ad9e628a523a44bcddf96d863b749354f8bc5dd324dabeac'
-            '7fb85035446d17b2b4f153af9591b0e4a7d005b42e4659a73524e1ee983c2f5e'
-            '9627c4770142299b7c4717ee0fd1a4eaafc3ff51645c1cd9d07cd5aadd1a8962'
-            '2e4d1f7ac01b6252b92e29c13cc00b1cd1445823f21da40d3802885512a648fe'
-            '4e51f95af6999f64fac53691b2ea8a35dc59a019df9797bcea144172b3c54bd9'
-            'a305329b31d2c04dc8944cd55ea6abd7333cf8c3515a04c242d567125db27caf'
-            'c39bfb8c5e4f6d26601e9cb03b979265ff0bbbcb2d2758005a4d0b0ed9616c7f'
-            '37927b5a4e93461343841c84bdd1c67755bd03ac14d454ad8f4a952c37049ff7'
-            'bc27e13a2066fa5172bc02b580877f3d7914d4ced8842f0a8c8ed09a05844039'
-            '2e0a36de42e2741122e7ab5e8895508a71d0b0db460d19013ab2424d29b52553'
-            '8e8e8fc235ecccdacf775e30b7bffcf67749d78e1961710a48d40d06c7a12702'
-            '4f501f1dea6a6c09d1548f45d4d0b19a757170ab9a3396ce125fa62949c4e2f9'
-            '74abe05319d5f385e4f3e1206543613237ce8dfb7f6b8dd14bc73c84831f1e4e'
-            'c5e205e23b56185202cdf7bd98184812ad10e8b124dbb2ceae8429d50339ecf8')
+        0040-wintab-msvc_try.patch
+        0050-fix-vulkan-import-lib-lookup.patch)
+sha256sums=('fae57dd7273d76e21712abfba43a85fffba00e8bf3e3cf9a874b993b8ac4857d'
+            '22adff92a40e38efc50ea8c857af2f1467d71c4a716161f7e702a584d514e02c'
+            '233b56fc38fe0aac714b0cfacdc8250dd64c1984d1a6785b9898a2d2c8a015ed'
+            '5db6ed8efa380efd20735e2dd38b7490c41b2357b16c521be221e9f9b017e334'
+            'bfbcc3e9e7bdfb53fe9e94c022665cb21b508105e44334fc62ab23d47fd877e5'
+            '35b87402d710cc5b571df0a2248c43d46ae1693ca1af7447322314e27c96f4b1'
+            '2182f683c446d34b18ee169bb55834d43ca7f7e817f592e53133bd0c85cec3f7'
+            'c671ee34e6cbd75daa6dd73d0c2d4b86ed5d894e50c2dfff8502a2ccdd9b2e86'
+            '2422f3feed15706cf278f6705a36e9a85bc58f15f5437f93ca458193bbeebde4'
+            '2f9769332cc970dcf2ccb6ebb26d75363f3e7e8960606bf1a379dd0991dfa2f4'
+            '5a06a1e7dd091edca77d8ba794d2405c7523b43a7cf9575179dc65dd24a78261'
+            '2b4b5fe393997959c85502de2ca590b20aa020d4ca62768ece83c1ced4cc1a62'
+            'e193ef6fb88a5de4334e992ab3ca0f87eebaa1e8aebb66f216004907a252dc19'
+            '2375f98cbbbddff9b324c24e44906731816cd8f45abad4f7fd4fbff859fe84a8'
+            'db1927ec5c98b4c92b28055c4f3d54bb76f3ba3c9dd639c5996eb13481866c28'
+            'd6f07fa2aba173f72ef24b43680fec04d91e19572a9d3570727e6605f61b41d8'
+            'c6d15990e23656d6c25c09dd5087ba3eee2d12ee55a7efa98dd9cc344d1da9d6'
+            '6b47b42c18ae25e4ebe6406d51863ffae949f40232e0459b7dda7d88e47778ed'
+            '99be1dd04ba9d943bf65485eba204384394b4149620c8f7022486a9f39cdda30'
+            '0ecad0fb38b6d6e4575dd9036604885388454a2be2e9ab02b5f6663638ec8e7f'
+            '8bfdc3d523793a7d1bf54768471bae9617fc14b19ac69c6abf5af80a6aaed76f'
+            'd0fc87c54b63ae26e9fe131142a22cb9a362625a544bf267d462def93caef7b2'
+            '38bfc1175e945c518b1a60314d11b7b35c18e45cf4e7c2e4916ba8347cec37ca'
+            '7dc8d6f3069de04ce3cf2f55fc2b034754246e06e6f0e4bc541e9837e02ee086'
+            '0d57fef0d4ad5c608e15822d51a6b77f8721030b2a801eaa19d27ee642d9b9c3'
+            '200082fcf47880d508bfa7c2c6c004102a8520c1d8ed87fd366fc75addf95c3e')
 #options=(debug)
 
 apply_patch_with_msg() {
@@ -152,8 +150,9 @@ apply_patch_with_msg() {
 prepare() {
   cd "${srcdir}"/${_realname}-${pkgver}
   cp -f ${srcdir}/platform_win32_mingw64.cmake build_files/cmake/platform/
-
-  rm -f release/windows/icons/blender.exe.manifest
+  
+  cp -f ${srcdir}/comctl_v6.exe.manifest release/windows/icons/blender.exe.manifest
+  cp -f ${srcdir}/comctl_v6.exe.manifest ./tests.exe.manifest
 
   apply_patch_with_msg \
     0001-mingw-buildsystem.patch \
@@ -164,9 +163,7 @@ prepare() {
     0008-mingw-use-X11-like-path-layout.patch \
     0009-include-missing-headers.patch \
     0010-conflict-near-far-macroses.patch \
-    0011-no-TIME_UTC-on-msvcrt.patch \
     0013-force-draco.patch \
-    0014-fix-find-numpy-2.patch \
     0015-mingw-python-like-msvc.patch \
     0016-mingw-windres.patch \
     0019-fix-casts.patch \
@@ -176,11 +173,10 @@ prepare() {
     0024-openvdb-shared.patch \
     0025-callback-function-prototype-fix.patch \
     0028-use-std-namespace.patch \
-    0032-fix-finding-tbb.patch \
     0035-Enable-SSE2NEON-on-Windows-ARM.patch \
     0039-no-WRL-on-mingw-w64.patch \
-    0050-fix-vulkan-import-lib-lookup.patch \
-    f4ad7267342bb4eb46bc6d384f4a28d10d251978.patch
+    0040-wintab-msvc_try.patch \
+    0050-fix-vulkan-import-lib-lookup.patch
 
   if check_option "debug" "y"; then
     apply_patch_with_msg \
@@ -203,12 +199,10 @@ build() {
 
   CXXFLAGS+=" -w"
   CFLAGS+=" -w"
-  if [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]]; then
+  if [[ ${CC} == clang ]]; then
     CXXFLAGS+=" -Wno-c++11-narrowing"
     CFLAGS+=" -Wno-unreachable-code-generic-assoc"
-  fi
-
-  if [[ $MINGW_PACKAGE_PREFIX != *-clang-* ]]; then
+  else
     CFLAGS+=" -Wno-incompatible-pointer-types"
   fi
 
@@ -227,12 +221,12 @@ build() {
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     "${_extra_config[@]}" \
+    -Dfmt_SHARED_LIBS=ON \
     -DWITH_SYSTEM_AUDASPACE=ON \
-    -DWITH_SYSTEM_GFLAGS=OFF \
-    -DWITH_SYSTEM_GLOG=OFF \
+    -DWITH_RUBBERBAND=OFF \
+    -DWITH_SYSTEM_GFLAGS=ON \
+    -DWITH_SYSTEM_GLOG=ON \
     -DWITH_SYSTEM_BULLET=OFF \
-    -DWITH_SYSTEM_LZO=ON \
-    -DWITH_SYSTEM_EIGEN3=ON \
     -DWITH_SYSTEM_FREETYPE=ON \
     -DWITH_INSTALL_PORTABLE=OFF \
     -DWITH_NANOVDB=OFF \
@@ -243,7 +237,6 @@ build() {
     -DWITH_CYCLES_CUDA_BINARIES=OFF \
     -DWITH_CYCLES_OSL=ON \
     -DWITH_VULKAN_BACKEND=ON \
-    -DWITH_MEM_JEMALLOC=OFF \
     -DWITH_MOD_OCEANSIM=ON \
     -DPYTHON_VERSION=${_pyver} \
     -DPYTHON_LIBPATH=${MINGW_PREFIX}/lib \
@@ -251,7 +244,7 @@ build() {
     -DPYTHON_INCLUDE_DIR=${MINGW_PREFIX}/include/python${_pyver} \
     -DWITH_PYTHON_INSTALL=OFF \
     -DWITH_PYTHON_INSTALL_NUMPY=OFF \
-    -DWITH_OPENMP=ON \
+    -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=ON \
     ../${_realname}-${pkgver}
 
   ${MINGW_PREFIX}/bin/cmake --build .
@@ -268,8 +261,8 @@ package() {
   # Manually install draco bindings
   #_pyver=$(${MINGW_PREFIX}/bin/python -c "import sys;sys.stdout.write('.'.join(map(str, sys.version_info[:2])))")
   #mkdir -p "${pkgdir}${MINGW_PREFIX}/lib/python${_pyver}"/
-  #mv "${pkgdir}"${MINGW_PREFIX}/share/blender/4*/python/lib/* "${pkgdir}"${MINGW_PREFIX}/lib/
-  #rm -r "${pkgdir}"${MINGW_PREFIX}/share/blender/4*/python
+  #mv "${pkgdir}"${MINGW_PREFIX}/share/blender/5*/python/lib/* "${pkgdir}"${MINGW_PREFIX}/lib/
+  #rm -r "${pkgdir}"${MINGW_PREFIX}/share/blender/5*/python
 
   ${MINGW_PREFIX}/bin/python -m compileall -o 0 -o 1 -q "${pkgdir}${MINGW_PREFIX}/share/blender/${pkgver%.*}"
   ${MINGW_PREFIX}/bin/python -m compileall -o 0 -o 1 -q \

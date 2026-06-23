@@ -3,8 +3,8 @@
 _realname=prometheus-client
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.22.0
-pkgrel=1
+pkgver=0.24.1
+pkgrel=2
 pkgdesc="Prometheus instrumentation library for Python applications (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -13,15 +13,17 @@ msys2_references=(
   'purl: pkg:pypi/prometheus-client'
 )
 url="https://github.com/prometheus/client_python"
+msys2_repository_url='https://github.com/prometheus/client_python'
 license=('spdx:Apache-2.0')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
-              "${MINGW_PACKAGE_PREFIX}-python-twisted")
+              "${MINGW_PACKAGE_PREFIX}-python-twisted"
+              "${MINGW_PACKAGE_PREFIX}-python-asgiref")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname/-/_}-${pkgver}.tar.gz")
-sha256sums=('18da1d2241ac2d10c8d2110f13eedcd5c7c0c8af18c926e8731f04fc10cd575c')
+sha256sums=('7e0ced7fbbd40f7b84962d5d2ab6f17ef88a72504dcf7c0b40737b43b2a461f9')
 
 build() {
   cp -r "${_realname/-/_}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

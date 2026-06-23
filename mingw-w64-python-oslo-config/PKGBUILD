@@ -3,7 +3,7 @@
 _realname=oslo-config
 pkgbase=mingw-w64-python-${_realname}
 pkgname=( "${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=9.8.0
+pkgver=10.3.0
 pkgrel=1
 pkgdesc="parsing command line arguments and .ini style configuration files (mingw-w64)"
 arch=('any')
@@ -35,10 +35,10 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-oslotest"
               "${MINGW_PACKAGE_PREFIX}-python-oslo-log")
 options=(!strip)
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname/-/_}/${_realname/-/_}-${pkgver}.tar.gz")
-sha256sums=('eea8009504abee672137c58bdabdaba185f496b93c85add246e2cdcebe9d08aa')
+sha256sums=('c405a40a8b05aa97bb5c24bb0b849981a7a5b7d56304df40632722312c58eaca')
 
 prepare() {
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname/-/_}-${pkgver}" "python-build-${MSYSTEM}"
 
   export PBR_VERSION=$pkgver

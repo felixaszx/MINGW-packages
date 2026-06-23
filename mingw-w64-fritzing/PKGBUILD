@@ -9,6 +9,7 @@ pkgdesc="Electronic Design Automation software with a low entry barrier, suited 
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/fritzing/fritzing-app"
+msys2_repository_url='https://github.com/fritzing/fritzing-app'
 license=('spdx:GPL-3.0-or-later' 'CCPL:cc-by-sa-3.0')
 groups=("${MINGW_PACKAGE_PREFIX}-eda")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
@@ -52,7 +53,7 @@ prepare() {
 build() {
   cd "${srcdir}"/${_realname}
 
-  lrelease phoenix.pro
+  lrelease-qt5 phoenix.pro
 
   local qmake_config
   if check_option "debug" "y"; then
@@ -62,7 +63,7 @@ build() {
   fi
 
   MSYS2_ARG_CONV_EXCL="PREFIX=" \
-  qmake \
+  qmake-qt5 \
     PREFIX=${MINGW_PREFIX} \
     CONFIG+=${qmake_config} \
     DEFINES+=QUAZIP_LIB \

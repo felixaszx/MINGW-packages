@@ -3,16 +3,20 @@
 _realname=cachetools
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=5.5.2
+pkgver=6.2.6
 pkgrel=1
 pkgdesc='Extensible memoizing collections and decorators (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
+  'anitya: 7022'
   'archlinux: python-cachetools'
+  'gentoo: dev-python/cachetools'
   'purl: pkg:pypi/cachetools'
 )
 url="https://github.com/tkem/cachetools"
+msys2_repository_url='https://github.com/tkem/cachetools'
+msys2_changelog_url="https://github.com/tkem/cachetools/blob/master/CHANGELOG.rst"
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-python")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
@@ -20,7 +24,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('1a661caa9175d26759571b2e19580f9d6393969e5dfca11fdb1f947a23e640d4')
+sha256sums=('16c33e1f276b9a9c0b49ab5782d901e3ad3de0dd6da9bf9bcd29ac5672f2f9e6')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"
@@ -29,7 +33,7 @@ build() {
 
 check() {
   cd "${srcdir}/python-build-${MSYSTEM}"
-  ${MINGW_PREFIX}/bin/python -m pytest || warning "Tests failed"
+  PYTHONPATH=src ${MINGW_PREFIX}/bin/python -m pytest || warning "Tests failed"
 }
 
 package() {

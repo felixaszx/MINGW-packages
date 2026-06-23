@@ -4,11 +4,12 @@ _realname=libgridxc
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 pkgver=2.1.0
-pkgrel=3
+pkgrel=6
 pkgdesc="Library for XC computation on grids. (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://gitlab.com/siesta-project/libraries/libgridxc'
+msys2_repository_url='https://gitlab.com/siesta-project/libraries/libgridxc'
 msys2_references=(
   'aur: libgridxc'
 )
@@ -42,15 +43,12 @@ build() {
     _extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
   fi
 
-  if [[ ${CARCH} == aarch64 ]]; then
-    _extra_config+=("-DLIBGRIDXC_WITH_MPI=OFF")
-  else
-    _extra_config+=("-DLIBGRIDXC_WITH_MPI=ON")
-  fi
-
   local _fflags=""
   if [[ ${CARCH} == x86_64 ]]; then
+    _extra_config+=("-DLIBGRIDXC_WITH_MPI=ON")
     _fflags+=" -march=x86-64-v3"
+  else
+    _extra_config+=("-DLIBGRIDXC_WITH_MPI=OFF")
   fi
 
   FFLAGS="${_fflags}" \

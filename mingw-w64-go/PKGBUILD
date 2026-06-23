@@ -4,13 +4,14 @@
 _realname=go
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=1.24.3
+pkgver=1.26.4
 pkgrel=1
 pkgdesc="Go Lang (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 msys2_references=(
   'archlinux: go'
+  'gentoo: dev-lang/go'
   "cpe: cpe:/a:golang:go"
 )
 license=('spdx:BSD-3-Clause')
@@ -22,7 +23,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-${_realname}"
              "${MINGW_PACKAGE_PREFIX}-cc")
 options=('!strip')
 source=("https://go.dev/dl/go${pkgver}.src.tar.gz"{,.asc})
-sha256sums=('229c08b600b1446798109fae1f569228102c8473caba8104b6418cb5bc032878'
+sha256sums=('4f668a32fbfc1132e6a881fb968c2f1dada631492a339211735fbb255a42602d'
             'SKIP')
 validpgpkeys=('EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796')
 noextract=(go${pkgver}.src.tar.gz)
@@ -39,6 +40,8 @@ apply_patch_with_msg() {
 
 prepare() {
   tar -xzf "${srcdir}"/go${pkgver}.src.tar.gz -C "${srcdir}" || true
+
+  cd "${_realname}"
 }
 
 build() {
@@ -103,8 +106,8 @@ package() {
   install -Dm644 go.env "${pkgdir}${MINGW_PREFIX}/lib/go/go.env"
 
   install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/go/LICENSE"
- 
-  # install profile script 
+
+  # install profile script
   mkdir -p "${pkgdir}${MINGW_PREFIX}"/etc/profile.d
   echo "export GOROOT=${MINGW_PREFIX}/lib/go" > "${pkgdir}${MINGW_PREFIX}"/etc/profile.d/go.sh
   cp "${pkgdir}${MINGW_PREFIX}"/etc/profile.d/go.{sh,zsh}

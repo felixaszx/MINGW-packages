@@ -3,7 +3,7 @@
 _realname=qt6
 pkgbase=mingw-w64-${_realname}-static
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-static")
-_qtver=6.9.1
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
@@ -56,13 +56,13 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/sing
         008-Fix-libjpeg-workaround-for-conflict-with-rpcndr.h.patch
         009-Fix-transitive-dependencies-of-static-libraries.patch
         010-Support-finding-static-MariaDB-client-library.patch
-        011-Fix-crashes-in-rasterization-code-using-setjmp.patch
         012-Handle-win64-in-dumpcpp-and-MetaObjectGenerator-read.patch
         013-disable-finding-webp-from-cmake-config-files.patch
         014-imageformats-transitive-dependencies.patch
         015-qt6-windeployqt-fixes.patch
-        016-fix-build-on-mingw64.patch::https://github.com/qt/qtquick3d-assimp/commit/28ebc845.patch)
-sha256sums=('364fde2d7fa42dd7c9b2ea6db3d462dd54f3869e9fd0ca0a0ca62f750cd8329b'
+        016-fix-build-with-llvm-22.patch
+        143e64370488cc4786a3cbcfe481fdaf240b9626.patch)
+sha256sums=('252acef8c5ae68074d91cadba2ee4a83465051bbb970dd26e8f0daa0f3904e03'
             '26f3bcc3729520a5ba648a9ce92a9293c8fb1cf16d81af612587ce10d501dcb6'
             '817ce7a15eafb945da5f03706cd7196198c9a903c0372cb7023d1e27634355a4'
             'af3f4c6491942ee6a7681eecef2d999897e38fcef7a5edcf3774589f137dac73'
@@ -73,12 +73,12 @@ sha256sums=('364fde2d7fa42dd7c9b2ea6db3d462dd54f3869e9fd0ca0a0ca62f750cd8329b'
             '4b33eb1cd4cf43acd794bc5400a7224c96d6d0936f5589616beea3c470dc2165'
             '394d723e894d08b0b8584c0c0e1e73965f518acc7213e979ffc2907ceaf4bf40'
             '98a04c6fc0e7999f62db44a264ac73919dec4f56f2991ec5596e730d30662e55'
-            '474eb6643ae8139c41e90363c8846c52162cd858d863c195c0431594d351896d'
             '39d57493b0edc1317729b88dad6a07b86936072f0fbbd2aae7b01e2211ce29ed'
             'ce0023e8b72fe4b5840ca892bd5ad52120b6b484161bf2ffe0b6da9404625641'
-            '1d640ce887bbaaa847b8dd30a1a655f273c9907de06ad9d91580c02215e3e8c8'
-            'ba6d3384ef40e287807e2fe33e3b8ffc815ca2f3b1af5def426fe62c880a5ec9'
-            'f30f4591637498dc2985e5de548b2d74c7ba73c794fe967899d408528f21f886')
+            'a4452139016d572b8353f085ffc2e3376d03f386843455dc774ee33baa748179'
+            '8201d978f1bca6abf784cd9e0a206c53c6cef7028e3a95712024db075dd7ea18'
+            'a3c2e5f76b19fc56f9a0b3e855324ea40819311efde7020a3b1af1da15d3c0b4'
+            'debc48fb9790fe6de9f44371018565a38049d17fc29d9da502363948c20426a3')
 
 # Use the right mkspecs file
 if [[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]]; then
@@ -116,20 +116,18 @@ prepare() {
     008-Fix-libjpeg-workaround-for-conflict-with-rpcndr.h.patch \
     009-Fix-transitive-dependencies-of-static-libraries.patch \
     010-Support-finding-static-MariaDB-client-library.patch \
-    011-Fix-crashes-in-rasterization-code-using-setjmp.patch \
     012-Handle-win64-in-dumpcpp-and-MetaObjectGenerator-read.patch \
     013-disable-finding-webp-from-cmake-config-files.patch \
     014-imageformats-transitive-dependencies.patch \
-    015-qt6-windeployqt-fixes.patch
-
-  cd qtquick3d/src/3rdparty/assimp/src
-  apply_patch_with_msg \
-    016-fix-build-on-mingw64.patch
-  cd -
+    015-qt6-windeployqt-fixes.patch \
+    016-fix-build-with-llvm-22.patch \
+    143e64370488cc4786a3cbcfe481fdaf240b9626.patch
 
   local _ARCH_TUNE
   if [[ ${CARCH} == x86_64 ]]; then
     _ARCH_TUNE="-march=nocona -msahf -mtune=generic"
+  elif [[ ${CARCH} == aarch64 ]]; then
+    _ARCH_TUNE="-march=armv8.1-a"
   fi
 
   BIGOBJ_FLAGS="-Wa,-mbig-obj"
@@ -147,6 +145,10 @@ build() {
     _extra_config+=("-DCMAKE_BUILD_TYPE=Release")
   else
     _extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
+  fi
+
+  if [[ ${CC} == clang ]]; then
+    CXXFLAGS+=" -Wno-character-conversion"
   fi
 
   CXXFLAGS+=" -Wno-invalid-constexpr" \

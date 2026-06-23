@@ -3,12 +3,13 @@
 _realname=ggml
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.0.2254
+pkgver=0.15.2.r0.g707321c4
 pkgrel=1
-pkgdesc="Tensor library for machine learning. (mingw-w64)"
+pkgdesc="Tensor library for machine learning (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/ggml-org/ggml"
+msys2_repository_url='https://github.com/ggml-org/ggml'
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-cc-libs"
@@ -25,20 +26,16 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-opencl-headers"
   "${MINGW_PACKAGE_PREFIX}-shaderc"
   "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
-  'git'
+  "${MINGW_PACKAGE_PREFIX}-spirv-headers"
+  "git"
 )
-_commit='a2253f34452312d4c3be4f42451591eeaff12467'
-source=("${_realname}"::"git+${url}.git#commit=${_commit}")
-sha256sums=('3efdb59157486ff4798a16cc7b5c7a66691ca8cbc00eabe1c17a7da3cd32c561')
+_commit="707321c4cf6d21cb4bc831aa8b687dbf01a521ce"
+source=("git+https://github.com/ggml-org/ggml.git#commit=${_commit}")
+sha256sums=('01cf1d4ec2c466f785a5e7b55252161ac0763983eb7a8a646898f96eb3f89ad0')
 
 pkgver() {
   cd "${_realname}"
-
-  printf "0.0.%s" "$(git rev-list --count "${_commit}")"
-}
-
-prepare() {
-  cd ${_realname}
+  git describe --long "${_commit}" | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
 }
 
 build() {
@@ -49,9 +46,13 @@ build() {
     extra_config+=("-DCMAKE_BUILD_TYPE=Debug")
   fi
 
-  # if [[ ${CARCH} == x86_64 ]]; then
-  #   extra_config+=("-DGGML_BACKEND_DL=ON" "-DGGML_CPU_ALL_VARIANTS=ON")
-  # fi
+  if [[ ${CARCH} == x86_64 ]]; then
+    extra_config+=("-DGGML_BACKEND_DL=ON" "-DGGML_CPU_ALL_VARIANTS=ON")
+  fi
+  if [[ ${MSYSTEM} == CLANG* ]]; then
+    # fails to build with gcc
+    extra_config+=("-DGGML_LTO=ON")
+  fi
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
     cmake \
@@ -59,7 +60,6 @@ build() {
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       "${extra_config[@]}" \
       -DBUILD_SHARED_LIBS=ON \
-      -DCMAKE_DLL_NAME_WITH_SOVERSION=ON \
       -DGGML_RPC=ON \
       -DGGML_BLAS=ON \
       -DGGML_BLAS_VENDOR=OpenBLAS \
@@ -70,7 +70,6 @@ build() {
       -DGGML_NATIVE=OFF \
       -DGGML_CCACHE=OFF \
       -DGGML_ALL_WARNINGS=OFF \
-      -DGGML_WIN_VER="0x603" \
       -DGGML_BUILD_EXAMPLES=OFF \
       -DGGML_BUILD_TESTS=OFF \
       -DPython3_EXECUTABLE=${MINGW_PREFIX}/bin/python \
@@ -81,7 +80,7 @@ build() {
 }
 
 check() {
-  cmake -DGGML_BUILD_TESTS=ON S"${_realname}" -B"build-${MSYSTEM}"
+  cmake -DGGML_BUILD_TESTS=ON -S"${_realname}" -B"build-${MSYSTEM}"
   cmake --build "build-${MSYSTEM}"
 
   ctest --test-dir "build-${MSYSTEM}" --output-on-failure
@@ -90,6 +89,6 @@ check() {
 package() {
   DESTDIR="${pkgdir}" cmake --install "build-${MSYSTEM}"
 
-  install -Dm644 "${srcdir}"/${_realname}/LICENSE \
+  install -Dm644 "${srcdir}/${_realname}"/LICENSE \
     "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
 }

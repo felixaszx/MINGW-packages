@@ -4,11 +4,12 @@ _realname=yapf
 pkgbase=mingw-w64-python-${_realname}
 pkgname=${MINGW_PACKAGE_PREFIX}-python-${_realname}
 pkgver=0.43.0
-pkgrel=1
+pkgrel=3
 pkgdesc='A formatter for Python files (mingw-w64)'
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/google/yapf'
+msys2_repository_url='https://github.com/google/yapf'
 msys2_references=(
   'archlinux: yapf'
   'purl: pkg:pypi/yapf'
@@ -29,7 +30,7 @@ sha256sums=('00d3aa24bfedff9420b2e0d5d9f5ab6d9d4268e72afbf59bb3fa542781d5218e')
 
 prepare() {
   cd "${srcdir}"
-  rm -rf python-build-${MSYSTEM} | true
+  rm -rf python-build-${MSYSTEM} || true
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}"
 }
 

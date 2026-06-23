@@ -5,11 +5,12 @@ _pyname=python-dateutil
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 pkgver=2.9.0.post0
-pkgrel=1
+pkgrel=4
 pkgdesc="Provides powerful extensions to the standard datetime module (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://github.com/dateutil/dateutil"
+msys2_repository_url='https://github.com/dateutil/dateutil'
 msys2_references=(
   'archlinux: python-dateutil'
   'purl: pkg:pypi/python-dateutil'
@@ -19,6 +20,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-python"
          "${MINGW_PACKAGE_PREFIX}-python-six")
 makedepends=("${MINGW_PACKAGE_PREFIX}-python-build"
              "${MINGW_PACKAGE_PREFIX}-python-installer"
+             "${MINGW_PACKAGE_PREFIX}-python-setuptools"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools-scm")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-freezegun"

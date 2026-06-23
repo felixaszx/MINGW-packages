@@ -1,6 +1,7 @@
---- a/scripts/addons_core/io_scene_gltf2/io/com/draco.py
-+++ b/scripts/addons_core/io_scene_gltf2/io/com/draco.py
-@@ -15,7 +15,7 @@
+diff -Naur blender-5.1.1/scripts/addons_core/io_scene_gltf2/io/com/draco.py blender-5.1.1-patched/scripts/addons_core/io_scene_gltf2/io/com/draco.py
+--- blender-5.1.1/scripts/addons_core/io_scene_gltf2/io/com/draco.py	2026-04-27 11:56:08.663154900 +0300
++++ blender-5.1.1-patched/scripts/addons_core/io_scene_gltf2/io/com/draco.py	2026-04-27 11:56:38.516634500 +0300
+@@ -14,7 +14,7 @@
      """
      lib_name = 'extern_draco'
      library_name = {
