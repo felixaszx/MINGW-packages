@@ -5,7 +5,7 @@ pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          #"${MINGW_PACKAGE_PREFIX}-${_realname}-docs"
 )
-pkgver=1.7.2
+pkgver=1.15.0
 pkgrel=1
 pkgdesc="A high-performance, multiplayer code editor (mingw-w64)"
 arch=('any')
@@ -48,7 +48,7 @@ source=("git+${msys2_repository_url}.git#tag=v${pkgver}"
         "zstd-sys-remove-statik.patch"
         "zed-fix-docs-build.patch"
         "zed-wsl-set-proper-cli-name.patch")
-sha256sums=('0a6dd332576f658a7b8598aa4cd34ec51c054cde8aa37373e0ea6b8b42583c16'
+sha256sums=('f650c84cc34f2d394693c4dce54ed824438932251caa36e631181f966f9c0642'
             '91e19ebc2adc8f83e43039e79776e3fda8ca919132d68a1fed6a5faca2683748'
             '48f4900ceb02d3aaf9a1020f33d56629156e96759f456c0e7ca18bfcf910767b'
             'acaf155e37120a1af8918854a457939cad71e59bca2ced866f89795ed6b0a7b2'
@@ -118,6 +118,11 @@ package_zed() {
 
   install -Dm644 "${_realname}"/LICENSE-{APACHE,GPL} -t "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/"
   #install -Dm644 "${_realname}/assets/licenses.md" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE.md"
+
+  local _complete="${pkgdir}${MINGW_PREFIX}/bin/zeditor --completions"
+  install -Dm644 <($_complete bash) "${pkgdir}${MINGW_PREFIX}/share/bash-completion/completions/zeditor"
+  install -Dm644 <($_complete fish) "${pkgdir}${MINGW_PREFIX}/share/fish/vendor_completions.d/zeditor.fish"
+  install -Dm644 <($_complete zsh) "${pkgdir}${MINGW_PREFIX}/share/zsh/site-functions/_zeditor"
 }
 
 package_zed-docs() {

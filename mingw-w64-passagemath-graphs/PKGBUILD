@@ -4,7 +4,7 @@ _realname=passagemath-graphs
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=10.8.4
+pkgver=10.8.9
 pkgrel=1
 pkgdesc="passagemath: Graphs, posets, hypergraphs, designs, abstract complexes, combinatorial polyhedra, abelian sandpiles, quivers (mingw-w64)"
 arch=('any')
@@ -31,7 +31,9 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-boost"
              "${MINGW_PACKAGE_PREFIX}-python-passagemath-setup"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 optdepends=(
+  "${MINGW_PACKAGE_PREFIX}-python-passagemath-benzene: generate fusene and benzenoid graphs with benzene"
   "${MINGW_PACKAGE_PREFIX}-python-passagemath-bliss: graph (iso/auto)morphisms with bliss"
+  "${MINGW_PACKAGE_PREFIX}-python-passagemath-buckygen: generate nonisomorphic fullerenes with buckygen"
   "${MINGW_PACKAGE_PREFIX}-python-passagemath-cliquer: find cliques in graphs with cliquer"
   "${MINGW_PACKAGE_PREFIX}-python-passagemath-cmr: combinatorial matrix recognition"
   "${MINGW_PACKAGE_PREFIX}-python-passagemath-homfly: Homfly polynomials of knots/links with libhomfly"
@@ -45,7 +47,7 @@ optdepends=(
 )
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname/-/_}-${pkgver}.tar.gz")
-sha256sums=('f8efc0c088fcfc1ce0980312cbb9bfe33691f790c1627405ccfb64832185a053')
+sha256sums=('b5b620ff6e738c82b88e862df624272a538b0c1a887daa68f15a90346860f478')
 
 build() {
   cp -r "${_realname/-/_}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

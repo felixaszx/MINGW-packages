@@ -4,13 +4,16 @@ _realname=llama.cpp
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 epoch=1
-pkgver=b9748
+pkgver=b10446
 pkgrel=1
 pkgdesc="Library and tools for running inference with Meta's LLaMA model (and derivatives) in C/C++ (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64' 'mingw64')
 url="https://github.com/ggml-org/llama.cpp"
 msys2_repository_url='https://github.com/ggml-org/llama.cpp'
+msys2_references=(
+  'archlinux: llama-cpp-vulkan'
+)
 license=('spdx:MIT')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-cc-libs"
@@ -24,7 +27,7 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-ninja"
 )
 source=("https://github.com/ggml-org/llama.cpp/archive/${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('3f2b25fb37948e82f7198a8ed1b695a10f0ab15e565db42a13420c871deb5ce3')
+sha256sums=('ed40749dd0edd6069fe4f2e4a670a4a563a15601518345fd12b5abe62e3c42fc')
 
 prepare() {
   cd ${_realname}-${pkgver}

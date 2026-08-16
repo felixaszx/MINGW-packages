@@ -4,7 +4,7 @@ _bootstrap=0
 _realname=crystal
 pkgbase="mingw-w64-${_realname}"
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=1.20.2
+pkgver=1.21.0
 pkgrel=1
 pkgdesc="Fast and statically typed, compiled language with Ruby-like syntax (mingw-w64)"
 arch=('any')
@@ -32,6 +32,7 @@ depends=(
   "${MINGW_PACKAGE_PREFIX}-zlib"
 )
 makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-asciidoctor"
   "${MINGW_PACKAGE_PREFIX}-llvm"
   $( (( _bootstrap )) || echo "${MINGW_PACKAGE_PREFIX}-crystal")
   "git"
@@ -40,16 +41,16 @@ checkdepends=(
   "${MINGW_PACKAGE_PREFIX}-lld" # needed for linking std_spec
 )
 source=("${_realname}::git+${msys2_repository_url}.git#tag=${pkgver}")
-sha256sums=('1b613bf415b1997f0e10e8dd555675203a4de26e98e491205414966142d25440')
+sha256sums=('b00a794b3ab7699e2f402e8ce7d30ab7837201b0f10e73c908dc13d309f2304a')
 
 if (( _bootstrap )); then
   # stage 0 compiler
   if [[ ${MSYSTEM} == CLANGARM64 ]]; then
-    source+=("https://github.com/crystal-lang/crystal/releases/download/1.20.2/crystal-1.20.2-windows-aarch64-gnu-unsupported.zip")
-    sha256sums+=('02881c2d1f8c6207ae0ffd73cbfd2ded12a87497e1e8c61f091ebe258ce2dc29')
+    source+=("https://github.com/crystal-lang/crystal/releases/download/1.21.0/crystal-1.21.0-windows-aarch64-gnu-unsupported.zip")
+    sha256sums+=('f5d11da3b1727ef49e4acffabcebab6229a631886f6164a94475be1f1390ae83')
   else
-    source+=("https://github.com/crystal-lang/crystal/releases/download/1.20.2/crystal-1.20.2-windows-x86_64-gnu-unsupported.zip")
-    sha256sums+=('ad069cb1f73db7180c913b5ce0e21ee75ddebbca9c76582f0f7f9a4958014bfc')
+    source+=("https://github.com/crystal-lang/crystal/releases/download/1.21.0/crystal-1.21.0-windows-x86_64-gnu-unsupported.zip")
+    sha256sums+=('d0f6f50b16720b240a4c49563c7670ddf1a790fd84c04b29d09818cd9b20608f')
   fi
 fi
 

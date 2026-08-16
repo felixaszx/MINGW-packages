@@ -3,8 +3,8 @@
 _realname=libarchive
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=3.8.7
-pkgrel=1
+pkgver=3.8.9
+pkgrel=2
 pkgdesc="Multi-format archive and compression library (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -17,23 +17,28 @@ msys2_references=(
   'gentoo: app-arch/libarchive'
 )
 license=("spdx:BSD-2-Clause")
-depends=(${MINGW_PACKAGE_PREFIX}-cc-libs
-         ${MINGW_PACKAGE_PREFIX}-bzip2
-         ${MINGW_PACKAGE_PREFIX}-expat
-         ${MINGW_PACKAGE_PREFIX}-libb2
-         ${MINGW_PACKAGE_PREFIX}-libiconv
-         ${MINGW_PACKAGE_PREFIX}-lz4
-         ${MINGW_PACKAGE_PREFIX}-openssl
-         ${MINGW_PACKAGE_PREFIX}-pcre2
-         ${MINGW_PACKAGE_PREFIX}-xz
-         ${MINGW_PACKAGE_PREFIX}-zlib
-         ${MINGW_PACKAGE_PREFIX}-zstd)
-makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
-             "${MINGW_PACKAGE_PREFIX}-cmake"
-             "${MINGW_PACKAGE_PREFIX}-ninja")
-source=("https://github.com/libarchive/libarchive/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-cc-libs"
+  "${MINGW_PACKAGE_PREFIX}-bzip2"
+  "${MINGW_PACKAGE_PREFIX}-expat"
+  "${MINGW_PACKAGE_PREFIX}-libb2"
+  "${MINGW_PACKAGE_PREFIX}-libiconv"
+  "${MINGW_PACKAGE_PREFIX}-lz4"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-pcre2"
+  "${MINGW_PACKAGE_PREFIX}-xz"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+  "${MINGW_PACKAGE_PREFIX}-zstd"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-cc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+  "${MINGW_PACKAGE_PREFIX}-ninja"
+)
+provides=("${MINGW_PACKAGE_PREFIX}-unzip")
+source=("${msys2_repository_url}releases/download/v${pkgver}/${_realname}-${pkgver}.tar.xz"
         "001-fix-static-library-output-name-on-mingw.patch")
-sha256sums=('d3a8ba457ae25c27c84fd2830a2efdcc5b1d40bf585d4eb0d35f47e99e5d4774'
+sha256sums=('888c934f9d95648ecb9163dc8e23ab80a476ecb81a8f1154704a227b5b676dde'
             '4331c43882b4dad45f6036ee5e81671e0b54bdacbea48a64597282fd3d1bfb85')
 
 prepare() {
@@ -73,6 +78,7 @@ build() {
       -DENABLE_LZO=OFF \
       -DENABLE_NETTLE=OFF \
       -DENABLE_TEST=OFF \
+      -DENABLE_UNZIP=ON \
       -DPOSIX_REGEX_LIB=LIBPCRE2POSIX \
       -S "${_realname}-${pkgver}" \
       -B "build-${MSYSTEM}"
@@ -91,4 +97,6 @@ package() {
 
   install -Dm644 "${srcdir}"/${_realname}-${pkgver}/COPYING \
     "${pkgdir}"${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE
+  cd "${pkgdir}${MINGW_PREFIX}/bin/"
+  ln bsdunzip unzip # see provides array
 }

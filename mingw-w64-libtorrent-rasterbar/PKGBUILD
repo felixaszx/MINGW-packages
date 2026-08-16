@@ -6,8 +6,8 @@
 _realname=libtorrent-rasterbar
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=2.0.12
-pkgrel=3
+pkgver=2.1.1
+pkgrel=1
 pkgdesc="libtorrent is a feature complete C++ bittorrent implementation focusing on efficiency and scalability (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -24,7 +24,11 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-pkgconf")
 source=("https://github.com/arvidn/libtorrent/releases/download/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('25b898d02e02e43ee9a8ea5480c20007f129091b5754d0283f94e4d51d11a19e')
+sha256sums=('0f163516ecef2e3331500266751de3098835a3c3ae0c2290448046c632bc0e93')
+
+prepare() {
+  cd "${_realname}-${pkgver}"
+}
 
 build() {
   declare -a extra_config
@@ -37,40 +41,44 @@ build() {
   mkdir "${srcdir}/build-${MSYSTEM}-shared" && cd "${srcdir}/build-${MSYSTEM}-shared"
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake.exe \
+  cmake \
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     ${extra_config} \
     -DBUILD_SHARED_LIBS=ON \
+    -DNO_EXAMPLES=ON \
+    -DNO_TESTS=ON \
     -Dbuild_tests=OFF \
     -Dbuild_examples=OFF \
     -Dbuild_tools=OFF \
     ../${_realname}-${pkgver}
 
-  ${MINGW_PREFIX}/bin/cmake.exe --build ./
+  cmake --build ./
 
   mkdir "${srcdir}/build-${MSYSTEM}-static" && cd "${srcdir}/build-${MSYSTEM}-static"
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake.exe \
+  cmake \
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     ${extra_config} \
     -DBUILD_SHARED_LIBS=OFF \
+    -DNO_EXAMPLES=ON \
+    -DNO_TESTS=ON \
     -Dbuild_tests=OFF \
     -Dbuild_examples=OFF \
     -Dbuild_tools=OFF \
     ../${_realname}-${pkgver}
 
-  ${MINGW_PREFIX}/bin/cmake.exe --build ./
+  cmake --build ./
 }
 
 package() {
   cd "${srcdir}/build-${MSYSTEM}-static"
-  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake.exe --install .
+  DESTDIR="${pkgdir}" cmake --install .
 
   cd "${srcdir}/build-${MSYSTEM}-shared"
-  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake.exe --install .
+  DESTDIR="${pkgdir}" cmake --install .
 
   install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 

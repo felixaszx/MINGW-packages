@@ -31,7 +31,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
 optdepends=("${MINGW_PACKAGE_PREFIX}-netcdf-c++: C++ bindings"
             "${MINGW_PACKAGE_PREFIX}-netcdf-fortran: Fortran bindings"
             "${MINGW_PACKAGE_PREFIX}-blosc: blosc and zstdfilters plugins")
-checkdepends=("unzip")
+checkdepends=("${MINGW_PACKAGE_PREFIX}-unzip")
 source=("https://github.com/Unidata/netcdf-c/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz"
         "0001-no-debug-libraries.patch"
         "0002-fix-build-with-hdf5-2.0.patch::https://github.com/Unidata/netcdf-c/commit/741c4b4a.patch")
@@ -89,7 +89,7 @@ build() {
     -DNETCDF_ENABLE_HDF5=ON \
     -DNETCDF_ENABLE_BYTERANGE=ON \
     -DNETCDF_ENABLE_PLUGINS=OFF \
-    -Wno-dev \
+    -Wno-author \
     "${srcdir}/${_realname}-c-${pkgver}"
   "${MINGW_PREFIX}"/bin/cmake.exe --build .
 
@@ -112,7 +112,7 @@ build() {
     -DNETCDF_ENABLE_S3_AWS=ON \
     -DENABLE_PLUGIN_INSTALL=ON \
     -DNETCDF_WITH_PLUGIN_DIR=${MINGW_PREFIX}/lib/netcdf \
-    -Wno-dev \
+    -Wno-author \
     "${srcdir}/${_realname}-c-${pkgver}"
   "${MINGW_PREFIX}"/bin/cmake.exe --build .
 }

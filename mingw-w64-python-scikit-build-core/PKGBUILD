@@ -3,8 +3,8 @@
 _realname=scikit-build-core
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=0.11.6
-pkgrel=3
+pkgver=1.0.3
+pkgrel=1
 pkgdesc="A next generation Python CMake adaptor and Python API for plugins (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -28,37 +28,40 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-python-installer"
 )
 checkdepends=(
-  "${MINGW_PACKAGE_PREFIX}-pybind11"
-  "${MINGW_PACKAGE_PREFIX}-python-build"
   "${MINGW_PACKAGE_PREFIX}-python-cattrs"
+  "${MINGW_PACKAGE_PREFIX}-python-filelock"
   "${MINGW_PACKAGE_PREFIX}-python-pip"
   "${MINGW_PACKAGE_PREFIX}-python-pytest"
   "${MINGW_PACKAGE_PREFIX}-python-pytest-subprocess"
-  "${MINGW_PACKAGE_PREFIX}-python-rich"
   "${MINGW_PACKAGE_PREFIX}-python-setuptools"
   "${MINGW_PACKAGE_PREFIX}-python-virtualenv"
+  "${MINGW_PACKAGE_PREFIX}-python-wheel"
+  "${MINGW_PACKAGE_PREFIX}-python-hatch-fancy-pypi-readme"
+  "${MINGW_PACKAGE_PREFIX}-python-setuptools-scm"
+  "${MINGW_PACKAGE_PREFIX}-python-numpy"
+  "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist"
+  "${MINGW_PACKAGE_PREFIX}-pybind11"
 )
+options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname//-/_}-${pkgver}.tar.gz")
-sha256sums=('5982ccd839735be99cfd3b92a8847c6c196692f476c215da84b79d2ad12f9f1b')
+sha256sums=('a4d7a05978ee37975c37743510c8991e2debce7ef83afb0a07c0c576fd4f16e8')
 
 build() {
   cp -r "${_realname//-/_}-${pkgver}" "build-${MSYSTEM}" && cd "build-${MSYSTEM}"
-  ${MINGW_PREFIX}/bin/python -m build --wheel --skip-dependency-check --no-isolation
+  python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 check() {
   cd "build-${MSYSTEM}"
-  ${MINGW_PREFIX}/bin/pip install ${_realname} -f dist --no-deps --no-index
-  ${MINGW_PREFIX}/bin/python -m pytest -ra --showlocals -m "not broken_on_urct" -k "not sdist_time_hash_set_epoch and not sdist_hash and not symlink"
-  ${MINGW_PREFIX}/bin/pip uninstall -y ${_realname}
+  # 1.0.3: 943 passed, 88 skipped, 3 xfailed, 2 xpassed
+  PYTHONPATH="$PWD/src" python -m pytest
 }
 
 package() {
   cd "build-${MSYSTEM}"
 
   MSYS2_ARG_CONV_EXCL="--prefix=" \
-    ${MINGW_PREFIX}/bin/python -m installer --prefix=${MINGW_PREFIX} \
-    --destdir="${pkgdir}" dist/*.whl
+    python -m installer --prefix=${MINGW_PREFIX} --destdir="${pkgdir}" dist/*.whl
 
   install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/python-${_realname}/LICENSE"
 }

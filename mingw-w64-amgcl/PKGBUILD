@@ -10,6 +10,9 @@ arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='http://amgcl.readthedocs.io/'
 msys2_repository_url="https://github.com/ddemidov/amgcl"
+msys2_references=(
+  'aur: '
+)
 license=('spdx:MIT')
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-cmake"
@@ -57,7 +60,7 @@ build() {
 
   #Version of pastix too old in amgcl
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-    "${MINGW_PREFIX}"/bin/cmake.exe -Wno-dev \
+    "${MINGW_PREFIX}"/bin/cmake.exe -Wno-author \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DAMGCL_BUILD_TESTS=OFF \

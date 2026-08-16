@@ -4,9 +4,9 @@ _realname=ollama
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgdesc='Create, run and share large language models (LLMs) (mingw-w64)'
-pkgver=0.30.7
+pkgver=0.32.13
 pkgrel=1
-_llama_ver=b9509 # from LLAMA_CPP_VERSION file
+_llama_ver=b10380 # from LLAMA_CPP_VERSION file
 arch=(any)
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url='https://ollama.com'
@@ -36,9 +36,9 @@ source=(https://github.com/ollama/ollama/archive/v${pkgver}/${_realname}-${pkgve
         https://github.com/ggml-org/llama.cpp/archive/${_llama_ver}/llama.cpp-${_llama_ver}.tar.gz
         0001-do-not-install-runtime-dlls.patch
         0002-do-not-skip-llama-compat-patch.patch)
-sha256sums=('a7bd79e063602b8013cfd9da49d58d2d24dcd5e7d2b3bd61bfa02f08c6b055e6'
-            '6a90bab3a581dad1dc3ab7bfffcd3711177d8cd41739a2b841a7c5ca2f94c393'
-            '75ba9ee7ddc4b025d2984a18f8584aff5f7765a320a51321bb8e51a82430a4fa'
+sha256sums=('103767d263ea21fcd9c1803a9093131bb7bcbd4590638690859645c8745c5768'
+            '4e3fd05eac77fa65186e6d843af502f99f857fb9df899aef2b9b1a3ef4437c4d'
+            '8cff7aba9b45dfbef669c6e5c6c778cc9d40ff6b94a8cde060150f618f41feaf'
             '3dcdee56985715b611c3bb4c02012ead5f5a4806e461489fa00e4378eae4377e')
 
 apply_patch_with_msg() {
@@ -87,7 +87,7 @@ build() {
   export GOPATH=${MINGW_PREFIX}/
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake -Wno-dev \
+  ${MINGW_PREFIX}/bin/cmake -Wno-author \
     -G"Ninja" \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     -DBUILD_SHARED_LIBS=ON \

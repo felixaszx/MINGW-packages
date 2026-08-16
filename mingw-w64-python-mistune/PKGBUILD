@@ -3,7 +3,7 @@
 _realname=mistune
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=3.3.0
+pkgver=3.3.3
 pkgrel=1
 pkgdesc="The fastest markdown parser in pure Python with renderer feature (mingw-w64)"
 arch=('any')
@@ -22,19 +22,18 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-setuptools"
 checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('3074ec4c61b384abe725128e4dcbb483f5a09cc4632012505cdee655d3a113b9')
+sha256sums=('c4c6c0c840b8637a2e9b8b6d607eb7c8f00888bf14c754409bcd339e848c2477')
 
 build() {
   cp -r "${_realname}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"
 
-  ${MINGW_PREFIX}/bin/python -m build --wheel --skip-dependency-check --no-isolation
+  python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 check() {
   cd "${srcdir}/python-build-${MSYSTEM}"
 
-  # || can be removed after https://github.com/lepture/mistune/issues/453 is solved.
-  ${MINGW_PREFIX}/bin/python -m pytest || warning "Tests failed"
+  ${MINGW_PREFIX}/bin/python -m pytest
 }
 
 package() {

@@ -4,8 +4,8 @@ _realname=passagemath-iml
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=10.8.4
-pkgrel=2
+pkgver=10.8.9
+pkgrel=1
 pkgdesc="passagemath: Linear Algebra with IML (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
@@ -34,7 +34,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-python-setuptools")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname/-/_}-${pkgver}.tar.gz")
-sha256sums=('3cb3d07c8a295b325bcf870f03089358128aaaf1b79c1e85f43d322af815aeaf')
+sha256sums=('e93c4d3cf6b5b5c39f2704c914ca1d111b54fa94e70b219e4076fa7de0a9999e')
 
 build() {
   cp -r "${_realname/-/_}-${pkgver}" "python-build-${MSYSTEM}" && cd "python-build-${MSYSTEM}"

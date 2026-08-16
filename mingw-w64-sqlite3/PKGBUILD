@@ -7,9 +7,9 @@ pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          $([[ ${CARCH} == i686 ]] || echo "${MINGW_PACKAGE_PREFIX}-sqlite-docs"))
 _sqlite_year=2026
-_amalgamationver=3530100
+_amalgamationver=3530400
 _docver=${_amalgamationver}
-pkgver=3.53.2
+pkgver=3.53.4
 pkgrel=1
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
 arch=('any')
@@ -21,8 +21,10 @@ msys2_references=(
   "cpe: cpe:/a:sqlite:sqlite"
 )
 license=(PublicDomain)
-depends=("${MINGW_PACKAGE_PREFIX}-tcl"
-         "${MINGW_PACKAGE_PREFIX}-zlib")
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-tcl"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+)
 makedepends=("${MINGW_PACKAGE_PREFIX}-cc")
 source=(https://www.sqlite.org/${_sqlite_year}/sqlite-src-${_amalgamationver}.zip
         https://www.sqlite.org/${_sqlite_year}/sqlite-doc-${_docver}.zip
@@ -33,11 +35,11 @@ source=(https://www.sqlite.org/${_sqlite_year}/sqlite-src-${_amalgamationver}.zi
         Makefile.ext.in
         README.md.in
         LICENSE)
-sha256sums=('1b2b5755d9064c4d5d1b0bf5307b48b089963e291c40cc7351318aa1b61c460e'
-            '9fd060bf7dd8c2c78e7411d06fb81dc8aaa059eb61eec80c65e0658a8545b433'
+sha256sums=('d18fa15aec74d8c17e1463f861095adc01b5ad190256acb4f91d22f0368d232b'
+            'a1d0f5de57485d062796ed7e67daff0758b50d00001a0f233a2c15aaf40bbdc8'
             '6518119034ceb2820d058afcb099d11f636271f55a41ffae22855af66a369166'
             'cf5c47c30e97f5493d2fad730a9bfcd33d20a0a052571e8e35b88f388d368724'
-            '5f916b9c21b0f33a9bc5c3720d1d19fa313e7a7c0ea8d3cb15e217f53a66572e'
+            '93f5dfdfecd9b7cd1d2f3a74d12e9d91a8cea652bb67a2a617b69372b8fed93d'
             '8dd2377afaad17fa85049be90bfc2bd757350343b3f64ff9bfbbcf3736593a34'
             '84b64569978dde5b63799099b0fbb3336943ef877170beb84483020c67e25b3c'
             '5ca42f1f92abfb61bacc9ff60f5836cc56e2ce2af52264f918cb06c3d566d562'
@@ -58,14 +60,14 @@ build() {
   mkdir -p "${srcdir}"/build-${MSYSTEM} && cd "${srcdir}"/build-${MSYSTEM}
 
   declare -a SQLITE_OPTIONS=(
-            "-DSQLITE_ENABLE_COLUMN_METADATA=1"
-            "-DSQLITE_USE_MALLOC_H=1"
-            "-DSQLITE_USE_MSIZE=1"
-            "-DSQLITE_ENABLE_UNLOCK_NOTIFY=1"
-            "-DSQLITE_DISABLE_DIRSYNC=1"
-            "-DSQLITE_ENABLE_DBSTAT_VTAB=1"
-            "-DSQLITE_SOUNDEX=1"
-            "-DSQLITE_ENABLE_MATH_FUNCTIONS=1"
+    "-DSQLITE_ENABLE_COLUMN_METADATA=1"
+    "-DSQLITE_USE_MALLOC_H=1"
+    "-DSQLITE_USE_MSIZE=1"
+    "-DSQLITE_ENABLE_UNLOCK_NOTIFY=1"
+    "-DSQLITE_DISABLE_DIRSYNC=1"
+    "-DSQLITE_ENABLE_DBSTAT_VTAB=1"
+    "-DSQLITE_SOUNDEX=1"
+    "-DSQLITE_ENABLE_MATH_FUNCTIONS=1"
   )
 
   CFLAGS+=" -fexceptions -fno-strict-aliasing ${SQLITE_OPTIONS[@]}"
@@ -80,8 +82,8 @@ build() {
       --all \
       --session \
       --out-implib \
-      --with-readline-inc=-I${MINGW_PREFIX}/include \
       --with-tcl=${MINGW_PREFIX}/lib \
+      --with-readline-cflags=-I${MINGW_PREFIX}/include \
       --with-tclsh=${MINGW_PREFIX}/bin/tclsh \
       TCLLIBDIR="${MINGW_PREFIX}/lib/sqlite${pkgver}"
 
@@ -109,11 +111,12 @@ check() {
 }
 
 package_sqlite3() {
-  optdepends=("${MINGW_PACKAGE_PREFIX}-tcl: for sqlite3_analyzer")
-  provides=(${MINGW_PACKAGE_PREFIX}-sqlite=${pkgver}
-            ${MINGW_PACKAGE_PREFIX}-sqlite-analyzer=${pkgver})
-  conflicts=(${MINGW_PACKAGE_PREFIX}-sqlite-analyzer)
-  replaces=(${MINGW_PACKAGE_PREFIX}-sqlite-analyzer)
+  provides=(
+    "${MINGW_PACKAGE_PREFIX}-sqlite=${pkgver}"
+    "${MINGW_PACKAGE_PREFIX}-sqlite-analyzer=${pkgver}"
+  )
+  conflicts=("${MINGW_PACKAGE_PREFIX}-sqlite-analyzer")
+  replaces=("${MINGW_PACKAGE_PREFIX}-sqlite-analyzer")
 
   cd "build-${MSYSTEM}"
   make DESTDIR="${pkgdir}" install

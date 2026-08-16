@@ -12,7 +12,7 @@ url="https://www.frontistr.com"
 msys2_repository_url="https://github.com/frontistr/frontistr"
 license=('spdx:MIT')
 depends=("${MINGW_PACKAGE_PREFIX}-cc-libs"
-         $([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-gcc-libgfortran")
+         "${MINGW_PACKAGE_PREFIX}-fc-libs"
          "${MINGW_PACKAGE_PREFIX}-metis"
          # "${MINGW_PACKAGE_PREFIX}-mumps" Couldn't be found by cmake!
          "${MINGW_PACKAGE_PREFIX}-omp"
@@ -61,7 +61,7 @@ build() {
   fi
 
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-    ${MINGW_PREFIX}/bin/cmake -Wno-dev \
+    ${MINGW_PREFIX}/bin/cmake -Wno-author \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
       "${_extra_config[@]}" \

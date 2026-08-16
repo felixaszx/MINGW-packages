@@ -3,7 +3,7 @@
 _realname=wasm-component-ld
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.5.25
+pkgver=0.5.29
 pkgrel=1
 pkgdesc="Command line linker for creating WebAssembly components (mingw-w64)"
 arch=('any')
@@ -19,7 +19,7 @@ depends=("${MINGW_PACKAGE_PREFIX}-lld")
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 checkdepends=("${MINGW_PACKAGE_PREFIX}-rust-wasm")
 source=("${url}/archive/v${pkgver}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('852f2b7a91c92b3f7442e2b839fce21ca235798e4e9fe4cfffa70c2f7dc5c511')
+sha256sums=('77cd7755210d22768aa8ee504b24aefdabce1b4a0da37bf449347f8b936f1f38')
 
 prepare() {
   cd "${_realname}-${pkgver}"

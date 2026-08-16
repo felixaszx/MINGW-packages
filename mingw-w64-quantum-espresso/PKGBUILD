@@ -21,7 +21,7 @@ msys2_references=(
 license=('spdx:GPL-2.0-or-later')
 depends=("${MINGW_PACKAGE_PREFIX}-fftw"
          "${MINGW_PACKAGE_PREFIX}-cc-libs"
-         $([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-gcc-libgfortran")
+         "${MINGW_PACKAGE_PREFIX}-fc-libs"
          "${MINGW_PACKAGE_PREFIX}-hdf5"
          "${MINGW_PACKAGE_PREFIX}-libmbd"
          #"${MINGW_PACKAGE_PREFIX}-libxc"
@@ -101,7 +101,7 @@ build() {
 
   CFLAGS+=" -Wno-incompatible-pointer-types" \
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-    "${MINGW_PREFIX}"/bin/cmake.exe -Wno-dev \
+    "${MINGW_PREFIX}"/bin/cmake.exe -Wno-author \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \

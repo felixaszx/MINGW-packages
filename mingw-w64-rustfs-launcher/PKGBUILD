@@ -3,14 +3,15 @@
 _realname=rustfs-launcher
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.0.4
+_pkgver=1.0.0-rc.2
+pkgver=${_pkgver//-/_}
 pkgrel=1
 pkgdesc="A simple launcher for RustFS (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://rustfs.com/'
 msys2_repository_url='https://github.com/rustfs/launcher'
-#license=('spdx:Apache-2.0')
+license=('spdx:Apache-2.0')
 depends=(
   "${MINGW_PACKAGE_PREFIX}-rustfs"
   "${MINGW_PACKAGE_PREFIX}-webview2-loader"
@@ -23,13 +24,13 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-trunk"
   "${MINGW_PACKAGE_PREFIX}-wasm-bindgen"
 )
-source=("${msys2_repository_url}/archive/v${pkgver}/launcher-${pkgver}.tar.gz"
+source=("${msys2_repository_url}/archive/${_pkgver}/launcher-${_pkgver}.tar.gz"
         '0001-launcher-0.0.4-system-candidate.patch')
-sha256sums=('003dd8a243ceee4c3edabb48fcea19fe21a6980951fadfca173d0b0c1ab92abf'
+sha256sums=('28c7d700690dfcaac299df6cb89931853ebae692cb13cfaed084513633823946'
             'e66b9267bde7dc875c6bdca48563a5c2dc2c9764e1a9207c6c6b929b733d760a')
 
 prepare() {
-  cd "${srcdir}/launcher-${pkgver}"
+  cd "${srcdir}/launcher-${_pkgver}"
 
   patch -p1 -i "${srcdir}"/0001-launcher-0.0.4-system-candidate.patch
 
@@ -43,15 +44,15 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/launcher-${pkgver}"
+  cd "${srcdir}/launcher-${_pkgver}"
 
   cargo tauri build --no-bundle
 }
 
 package() {
-  cd "${srcdir}/launcher-${pkgver}"
+  cd "${srcdir}/launcher-${_pkgver}"
 
   install -Dm755 "target/release/${_realname}.exe" -t "${pkgdir}${MINGW_PREFIX}/bin/"
 
-  #install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }

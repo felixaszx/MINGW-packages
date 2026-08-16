@@ -3,11 +3,11 @@
 _realname=croc
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=10.4.4
+pkgver=11.1.0
 pkgrel=1
 pkgdesc='Easily and securely send things from one computer to another.'
 arch=('any')
-mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
+mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 url='https://github.com/schollz/croc'
 msys2_repository_url='https://github.com/schollz/croc'
 msys2_references=(
@@ -19,7 +19,7 @@ msys2_references=(
 license=('spdx:MIT')
 makedepends=("${MINGW_PACKAGE_PREFIX}-go" "${MINGW_PACKAGE_PREFIX}-cc")
 source=("$pkgname-v$pkgver.tar.gz::$url/releases/download/v$pkgver/${_realname}_v${pkgver}_src.tar.gz")
-sha256sums=('32ad050fe42b078f72a06a254686eb49fa8087c832c173e60583cc9283d92e6b')
+sha256sums=('8df65fe084229b797f8b9bbd12b221091aa4581196f0f407a75f8967ddb29288')
 
 build() {
   cd "${_realname}-v${pkgver}"

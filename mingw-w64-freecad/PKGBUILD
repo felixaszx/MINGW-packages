@@ -4,7 +4,7 @@ _realname=freecad
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 pkgver=1.1.1
-pkgrel=4
+pkgrel=5
 _OS_commit=9e8a885
 pkgdesc="Free and Opensource multiplatform 3D parametric modeler (mingw-w64)"
 arch=('any')
@@ -110,7 +110,7 @@ build() {
 
   CXXFLAGS+=" -D_USE_MATH_DEFINES -Wno-deprecated-declarations -Wno-unknown-pragmas" \
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=;" \
-    cmake -Wno-dev \
+    cmake -Wno-author \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
       -DFREECAD_QT_VERSION="6" \

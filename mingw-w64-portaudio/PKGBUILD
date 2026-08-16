@@ -2,24 +2,30 @@
 
 _realname=portaudio
 pkgbase=mingw-w64-${_realname}
-pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
+         $([[ ${CARCH} == i686 ]] || echo "${MINGW_PACKAGE_PREFIX}-${_realname}-asio"))
 epoch=1
 pkgver=19.7.0
 _tarver=190700_20210406
-pkgrel=5
+pkgrel=7
 pkgdesc="A free, cross-platform, open source, audio I/O library (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clangarm64')
 url="https://www.portaudio.com/"
+msys2_references=(
+  'archlinux: portaudio'
+  'cpe: cpe:2.3:a:portaudio_project:portaudio'
+  'cygwin: '
+)
 license=("custom")
+depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cc"
   "${MINGW_PACKAGE_PREFIX}-pkgconf"
   "${MINGW_PACKAGE_PREFIX}-cmake"
   "${MINGW_PACKAGE_PREFIX}-ninja"
-  "${MINGW_PACKAGE_PREFIX}-asiosdk"
+  $([[ ${CARCH} == i686 ]] || echo "${MINGW_PACKAGE_PREFIX}-asiosdk")
 )
-depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
 source=("http://files.portaudio.com/archives/pa_stable_v${_tarver}.tgz"
         0001-clang-fix.patch
         0002-cmake-add-cpp-binding.patch
@@ -48,8 +54,6 @@ prepare() {
 }
 
 build() {
-  mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
-
   declare -a extra_config
   if check_option "debug" "n"; then
     extra_config+=("-DCMAKE_BUILD_TYPE=Release")
@@ -61,15 +65,50 @@ build() {
     ${MINGW_PREFIX}/bin/cmake \
       -GNinja \
       -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+      "${extra_config[@]}" \
+      -S ${_realname} \
+      -B build-${MSYSTEM}
+
+  ${MINGW_PREFIX}/bin/cmake --build build-${MSYSTEM}
+
+  if [[ ${CARCH} != i686 ]]; then
+  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
+    ${MINGW_PREFIX}/bin/cmake \
+      -GNinja \
+      -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
       -DASIOSDK_ROOT_DIR=${MINGW_PREFIX}/include/asiosdk \
       "${extra_config[@]}" \
-      ../${_realname}
+      -S ${_realname} \
+      -B build-${MSYSTEM}-asio
 
-  ${MINGW_PREFIX}/bin/cmake --build .
+  ${MINGW_PREFIX}/bin/cmake --build build-${MSYSTEM}-asio
+  fi
 }
 
-package() {
+package_portaudio() {
   cd "${srcdir}/build-${MSYSTEM}"
 
   DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --build . --target install
 }
+
+package_portaudio-asio() {
+  pkgdesc="A free, cross-platform, open source, audio I/O library with ASIO support (mingw-w64)"
+  depends=("${MINGW_PACKAGE_PREFIX}-cc-libs")
+  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+  provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+
+  cd "${srcdir}/build-${MSYSTEM}-asio"
+
+  DESTDIR="${pkgdir}" ${MINGW_PREFIX}/bin/cmake --build . --target install
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;

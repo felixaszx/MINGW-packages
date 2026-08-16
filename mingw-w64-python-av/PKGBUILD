@@ -4,8 +4,8 @@ _realname=python-av
 _name=PyAV
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=16.0.1
-pkgrel=3
+pkgver=18.1.0
+pkgrel=1
 pkgdesc="Pythonic bindings for FFmpeg (mingw-w64)"
 arch=('any')
 mingw_arch=('ucrt64' 'clang64' 'clangarm64')
@@ -29,8 +29,10 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-cython"
 )
 options=('!strip')
-source=("${_name}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('a4451b8328d492f17ceb4881db606ffa2c0fceba4508597cfb14ca823a9f66b0')
+source=(
+  "${_name}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha256sums=('030ed12f0d33ffdc4144439dfc3d48d6f7355e1e50bfc08ccaa3ed6b3a587f5f')
 
 build() {
   cd "${_name}-${pkgver}"

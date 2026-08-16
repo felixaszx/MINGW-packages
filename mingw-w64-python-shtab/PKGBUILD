@@ -3,8 +3,8 @@
 _realname=shtab
 pkgbase=mingw-w64-python-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=1.8.0
-pkgrel=4
+pkgver=1.10.0
+pkgrel=1
 pkgdesc="Automagic shell tab completion for Python CLI applications (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw64' 'ucrt64' 'clang64' 'clangarm64')
@@ -25,7 +25,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-timeout")
 options=('!strip')
 source=("https://pypi.org/packages/source/${_realname::1}/${_realname}/${_realname}-${pkgver}.tar.gz")
-sha256sums=('75f16d42178882b7f7126a0c2cb3c848daed2f4f5a276dd1ded75921cc4d073a')
+sha256sums=('70ccd485d8b38d9458c42b4e911a3d29a685dbea4b9aa7ea2d03ebe1a6e6e94f')
 
 prepare() {
   cd "${_realname}-${pkgver}"
@@ -56,6 +56,7 @@ package() {
   local _complete="python -m shtab --print-own-completion"
   install -Dm644 <($_complete bash) "${pkgdir}${MINGW_PREFIX}/share/bash-completion/completions/shtab"
   install -Dm644 <($_complete zsh) "${pkgdir}${MINGW_PREFIX}/share/zsh/site-functions/_shtab"
+  install -Dm644 <($_complete fish) "${pkgdir}${MINGW_PREFIX}"/share/fish/vendor_completions.d/shtab.fish
 
   install -Dm644 LICENCE "${pkgdir}${MINGW_PREFIX}/share/licenses/python-${_realname}/LICENCE"
 }
